@@ -40,6 +40,11 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
+
+        <repository>
+            <id>bintray-americanexpress-maven</id>
+            <url>https://dl.bintray.com/americanexpress/maven</url>
+        </repository>
     </repositories>
 
     <pluginRepositories>
@@ -131,7 +136,15 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.aexp.nodes.graphql</groupId>
+            <artifactId>nodes</artifactId>
+            <version>0.5.0</version>
+        </dependency>
+
+
     </dependencies>
+
 
     <build>
         <defaultGoal>spring-boot:run</defaultGoal>
