@@ -85,7 +85,7 @@ class LeafletMap extends PolymerElement {
     addTileLayer(urlTemplate, attribution, options) {
         let defaults = {
             attribution: attribution,
-            maxZoom: 13
+            maxZoom: 18
         };
 
         // add all given options to 'defaults' array
