@@ -9,7 +9,7 @@ This project was created from https://start.vaadin.com.
 
 ## Running the Application
 There are two ways to run the application:  
- - To run from the command line, use `mvn` and open [http://localhost:8080](http://localhost:8080) in your browser.
+ - To run from the command line, use `mvn` and open [http://localhost:9090](http://localhost:8080) in your browser.
  - Another way is to to run the `Application` class directly from your IDE.
 
 #### Intellij IDEA
@@ -18,7 +18,7 @@ There are two ways to run the application:
 
 Clicking on the green run button will start the application.
 
-After the application has started, you can view your it at http://localhost:8080/ in your browser.
+After the application has started, you can view your it at http://localhost:9090/ in your browser.
 
 #### Eclipse
 - Right click on a project folder and select `Run As` --> `Maven build..` . After that a configuration window is opened.
