@@ -2,16 +2,17 @@ package de.hsbhv.touroverview.views.tour;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
+import de.hsbhv.touroverview.backend.graphql.QueryManager;
 import de.hsbhv.touroverview.leaflet.MapComponent;
 import de.hsbhv.touroverview.leaflet.MapLocation;
 import de.hsbhv.touroverview.leaflet.MapLocationService;
 import de.hsbhv.touroverview.views.main.MainView;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.MalformedURLException;
@@ -51,7 +52,15 @@ public class TourView extends HorizontalLayout {
         map.addMarkersAndZoom(service.getAll());
         horizontalLayout2.add(map);
         add(horizontalLayout1, horizontalLayout2);
-
+//        add(map);
+/*        try {
+            new TourQuery().getTourByName("null");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }*/
+        QueryManager.getAllTours();
+        JSONObject json = QueryManager.getAllToursAllDetails();
+        System.out.println(json);
 //        setId("hello-world-view");
 //        name = new TextField("Your name");
 //        sayHello = new Button("Say hello");
