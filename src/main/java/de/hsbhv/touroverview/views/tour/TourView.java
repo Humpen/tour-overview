@@ -2,16 +2,19 @@ package de.hsbhv.touroverview.views.tour;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import de.hsbhv.touroverview.leaflet.MapComponent;
+import de.hsbhv.touroverview.leaflet.MapLocation;
 import de.hsbhv.touroverview.leaflet.MapLocationService;
 import de.hsbhv.touroverview.views.main.MainView;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.net.MalformedURLException;
 
 
 @Route(value = "hello", layout = MainView.class)
@@ -25,16 +28,29 @@ public class TourView extends HorizontalLayout {
     private MapComponent map;
     private MapLocationService service;
     @Autowired
-    public TourView(MapLocationService service) {
-
+    public TourView(MapLocationService service) throws MalformedURLException {
+        HorizontalLayout horizontalLayout1 = new HorizontalLayout();
+        HorizontalLayout horizontalLayout2 = new HorizontalLayout();
+//        Grid grid = new Grid();
+//        grid.setSizeFull();
+//        horizontalLayout1.add(grid);
+        Button button = new Button();
+        button.addAttachListener(e -> map.addMarker(new MapLocation(53.53806892532847,8.57793047581791,"Weserstrandbad")));
+        horizontalLayout1.add(button);
         this.service = service;
         setSizeFull();
         setPadding(false);
         setSpacing(false);
+        horizontalLayout1.setSpacing(false);
+        horizontalLayout1.setPadding(false);
+        horizontalLayout1.setSizeFull();
+        horizontalLayout2.setSpacing(false);
+        horizontalLayout2.setPadding(false);
+        horizontalLayout2.setSizeFull();
         map = new MapComponent();
-        map.setWidthFull();
         map.addMarkersAndZoom(service.getAll());
-        add(map);
+        horizontalLayout2.add(map);
+        add(horizontalLayout1, horizontalLayout2);
 
 //        setId("hello-world-view");
 //        name = new TextField("Your name");

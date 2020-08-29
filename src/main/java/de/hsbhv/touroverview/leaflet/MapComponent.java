@@ -95,11 +95,11 @@ public class MapComponent extends PolymerTemplate<TemplateModel> implements HasS
         spots.forEach(this::addMarker);
 
         // find top left and bottom right, then zoom the map
-        double lat1 = spots.stream().map(s -> s.getLatitude()).min(Double::compare).orElse(0d);
-        double long1 = spots.stream().map(s -> s.getLongitude()).min(Double::compare).orElse(0d);
+        double lat1 = spots.stream().map(MapLocation::getLatitude).min(Double::compare).orElse(0d);
+        double long1 = spots.stream().map(MapLocation::getLongitude).min(Double::compare).orElse(0d);
 
-        double lat2 = spots.stream().map(s -> s.getLatitude()).max(Double::compare).orElse(0d);
-        double long2 = spots.stream().map(s -> s.getLongitude()).max(Double::compare).orElse(0d);
+        double lat2 = spots.stream().map(MapLocation::getLatitude).max(Double::compare).orElse(0d);
+        double long2 = spots.stream().map(MapLocation::getLongitude).max(Double::compare).orElse(0d);
 
         fitBounds(lat1, long1, lat2, long2);
     }
