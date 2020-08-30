@@ -20,7 +20,7 @@ import java.net.MalformedURLException;
 
 @Route(value = "hello", layout = MainView.class)
 @RouteAlias(value = "", layout = MainView.class)
-@PageTitle("Hello World")
+@PageTitle("Tour View")
 @CssImport("./styles/views/helloworld/hello-world-view.css")
 public class TourView extends HorizontalLayout {
 
@@ -30,6 +30,7 @@ public class TourView extends HorizontalLayout {
     private MapLocationService service;
     @Autowired
     public TourView(MapLocationService service) throws MalformedURLException {
+
         HorizontalLayout horizontalLayout1 = new HorizontalLayout();
         HorizontalLayout horizontalLayout2 = new HorizontalLayout();
 //        Grid grid = new Grid();

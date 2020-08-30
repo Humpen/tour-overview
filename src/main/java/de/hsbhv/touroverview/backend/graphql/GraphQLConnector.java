@@ -22,7 +22,7 @@ public class GraphQLConnector {
 
     Logger logger;
 
-    private static final String standardAuthToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImdjbXMtbWFpbi1wcm9kdWN0aW9uIn0.eyJ2ZXJzaW9uIjozLCJpYXQiOjE1OTM0NTI2NTAsImF1ZCI6WyJodHRwczov" +
+    private static final String DEFAULT_AUTH_TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImdjbXMtbWFpbi1wcm9kdWN0aW9uIn0.eyJ2ZXJzaW9uIjozLCJpYXQiOjE1OTM0NTI2NTAsImF1ZCI6WyJodHRwczov" +
             "L2FwaS1ldS1jZW50cmFsLTEuZ3JhcGhjbXMuY29tL3YyL2NrYnRmZDFyNTAwZGwwMXo1MXJwZjkzYm0vbWFzdGVyIl0sImlzcyI6Imh0dHBzOi8vbWFuYWdlbWVudC5ncmFwaGNtcy5jb20vIiwic3ViIj" +
             "oiNGEwZWFjZmMtOWU0Zi00YTU3LTg4ODUtNGQ3NWEyMTMyMzM3IiwianRpIjoiY2tjMHNrZTI4MGpvMTAxeG5mNzI2Nm1nOCJ9.wKYXAYAPS80BFruCjmH5rsarB99M0WsH7-86DHBixDCFpSqxxH11aI4TTQVN" +
             "-HvsGXP3OZaO1JDff3-WGLKvgyhBb2QCWtqE4N4jiSLKrjg4pvQs0a8ajeaPL9Dc51PoIjlkDT7GD2iReIbk16U-5WUNwi7bd0yLzNpxkZ_6dpANJcAMFiawDfr3uIlX8Wt61_s8mQlcNt2fOsAyrPqfJkrcBa3stObwT-" +
@@ -66,7 +66,7 @@ public class GraphQLConnector {
         connection.setRequestProperty("Accept", "application/json");
         connection.setRequestProperty("charset", "utf-8");
         //Is there a custom Authorization given - Standard behaviour is the hard programmed key
-        connection.setRequestProperty("Authorization", "Bearer " + (authToken != null ? authToken : standardAuthToken));
+        connection.setRequestProperty("Authorization", "Bearer " + (authToken != null ? authToken : DEFAULT_AUTH_TOKEN));
         //TODO: In future there may be the need for more headers - maybe there should be the possibility to pass a Map of headers and their Values
 
         return connection;
@@ -78,8 +78,13 @@ public class GraphQLConnector {
      * @param variables
      * @return
      */
-    public String createRequestString(String query, Map<String, String> variables) {
+    protected String createRequestString(String query, Map<String, String> variables) {
         assert query != null;
+        /*
+        * Replaces line breaks with  blank spaces because the API apparently can't handle line breaks.
+        * Because of this line you can just copy paste the query from GraphiQL.
+        */
+        query = query.replace("\n", " ");
         StringBuilder requestBuilder = new StringBuilder();
         requestBuilder.append("{\"query\":\"")
                 .append(query).append("\"")
@@ -145,14 +150,15 @@ public class GraphQLConnector {
                 int responseCode = connection.getResponseCode();
                 throw new IOException("Response code "+ responseCode + (HttpStatus.resolve(responseCode) != null ? HttpStatus.resolve(responseCode).getReasonPhrase() : "") + "\n"+
                         "response message: "+ responseMessage + "\n" +
-                        "respone status: "+ responseStatus);
+                        "response status: "+ responseStatus);
             }
-//            connection.disconnect();
+            connection.disconnect();
+
             return json;
 
         } catch (IOException e) {
+            logger.error(e.getMessage(), e);
             e.printStackTrace();
-            logger.error(e.getMessage());
 
             return null;
         }

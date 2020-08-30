@@ -10,8 +10,6 @@ public class QueryManager {
                 "  tours {" +
                 "    name " +
                 "    id " +
-                "    strecke " +
-                "    dauer " +
                 "  } " +
                 "}";
         return graphQLConnector.sendRequest(graphQLConnector.createRequest(query));
@@ -187,7 +185,6 @@ public class QueryManager {
                 "    }\n" +
                 "  }\n" +
                 "}";
-        query = query.replace("\n", " ");
         return graphQLConnector.sendRequest(graphQLConnector.createRequest(query));
     }
 

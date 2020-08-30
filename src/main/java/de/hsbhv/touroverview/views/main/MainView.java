@@ -19,8 +19,11 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
+import de.hsbhv.touroverview.backend.graphql.QueryManager;
 import de.hsbhv.touroverview.views.about.AboutView;
 import de.hsbhv.touroverview.views.tour.TourView;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -68,7 +71,7 @@ public class MainView extends AppLayout {
         HorizontalLayout logoLayout = new HorizontalLayout();
         logoLayout.setId("logo");
         logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
-        logoLayout.add(new Image("images/logo.png", "Tour Overview logo"));
+        logoLayout.add(new Image("images/HS-BHV.png", "Tour Overview logo"));
         logoLayout.add(new H1("Tour Overview"));
         layout.add(logoLayout, menu);
         return layout;
@@ -84,10 +87,20 @@ public class MainView extends AppLayout {
     }
 
     private Component[] createMenuItems() {
-        RouterLink[] links = new RouterLink[] {
-            new RouterLink("Hello World", TourView.class),
-            new RouterLink("About", AboutView.class)
-        };
+        JSONObject json = QueryManager.getAllTours();
+        JSONObject data  = json.getJSONObject("data");
+        JSONArray tourArray = data.getJSONArray("tours");
+
+        RouterLink[] links = new RouterLink[tourArray.length()+1];
+//        new RouterLink("Hello World", TourView.class);,
+
+
+        for(int i = 0; i < tourArray.length(); ++i){
+            JSONObject tour = tourArray.getJSONObject(i);
+            links[i] = new RouterLink(tour.getString("name"), TourView.class);
+        }
+        links[links.length-1] = new RouterLink("About", AboutView.class);
+
         return Arrays.stream(links).map(MainView::createTab).toArray(Tab[]::new);
     }
 
