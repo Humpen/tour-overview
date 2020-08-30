@@ -188,13 +188,13 @@ public class QueryManager {
                 "    }\n" +
                 "  }\n" +
                 "}";
-        return graphQLConnector.sendRequest(graphQLConnector.createRequest(query));
+        return graphQLConnector.sendRequest(graphQLConnector.createRequest(query, null, ""));
     }
     //Funktioniert nicht - Die Scheiße...
-    public static JSONObject getTourByName(String name){
+    public static JSONObject getTourByName(){
         GraphQLConnector graphQLConnector = new GraphQLConnector();
-        String query = "query{\n" +
-                "  tour{\n" +
+        String query = "query MyQuery{\n" +
+                "  tour (where: {\"name\": \"Tour 1\"}) {\n" +
                 "    name\n" +
                 "    id\n" +
                 "    dauer\n" +
@@ -205,10 +205,41 @@ public class QueryManager {
                 "  }\n" +
                 "}";
         Map<String, String> variables = new HashMap<>();
-        variables.put("where:", "{name: \"" + name +"\"})");
-        return graphQLConnector.sendRequest(graphQLConnector.createRequest(query, variables));
-//        return graphQLConnector.sendRequest(graphQLConnector.createRequest(query));
+//        variables.put("where:", "name: " + name +"})");
+//        return graphQLConnector.sendRequest(graphQLConnector.createRequest(query, variables));
+        return graphQLConnector.sendRequest(graphQLConnector.createRequest(query));
 
+    }
+    //Löppt der Lachs
+    public static JSONObject getTourByName(String name){
+        GraphQLConnector graphQLConnector = new GraphQLConnector();
+        String query = "query MyQuery{\n" +
+                "  tour (where: {\"name\": \"Tour 1\"}) {\n" +
+                "    name\n" +
+                "    id\n" +
+                "    dauer\n" +
+                "    strecke\n" +
+                "    beschreibung{\n" +
+                "      html\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+        query = "query($names:String){\n" +
+                "  tour(where: {name: $names}){\n" +
+                "    name\n" +
+                "    id\n" +
+                "    dauer\n" +
+                "    strecke\n" +
+                "    beschreibung{\n" +
+                "      html\n" +
+                "    }\n" +
+                "  }\n" +
+                "}\n" +
+                "\n";
+        Map<String, String> variables = new HashMap<>();
+        variables.put("names", "Tour 1");
+//        return graphQLConnector.sendRequest(graphQLConnector.createRequest(query, variables));
+        return graphQLConnector.sendRequest(graphQLConnector.createRequest(query, variables, ""));
     }
 
 

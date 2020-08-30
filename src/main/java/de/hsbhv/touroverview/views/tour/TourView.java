@@ -61,10 +61,10 @@ public class TourView extends HorizontalLayout implements HasUrlParameter<String
         QueryManager.getAllTours();
         JSONObject json = QueryManager.getAllToursAllDetails();
         System.out.println(json);
-        if(tourName != null){
+/*        if(tourName != null){
             JSONObject tour = QueryManager.getTourByName(tourName);
             tour.get("data");
-        }
+        }*/
 //        setId("hello-world-view");
 //        name = new TextField("Your name");
 //        sayHello = new Button("Say hello");
@@ -82,7 +82,7 @@ public class TourView extends HorizontalLayout implements HasUrlParameter<String
             JSONObject tour = QueryManager.getTourByName(tourName);
             if(tour!= null){
                 Notification.show("löppt");
-                tour.get("data");
+                System.out.println(tour.get("data"));
             }
         }
     }

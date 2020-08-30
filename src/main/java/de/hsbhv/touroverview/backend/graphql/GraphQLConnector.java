@@ -72,6 +72,25 @@ public class GraphQLConnector {
         return connection;
     }
 
+
+    protected JSONObject createRequestJSON(String query, Map<String, String> variables, String operationName){
+        JSONObject json = new JSONObject();
+        json.put("query", query);
+        JSONObject variablesJSON = new JSONObject();
+        if(variables != null){
+            for(Map.Entry<String, String> entry : variables.entrySet()){
+                variablesJSON.put(entry.getKey(), entry.getValue());
+            }
+
+            json.put("variables", variablesJSON);
+        }else {
+            json.put("variables", "{}");
+        }
+
+        json.put("operationName", operationName != null ? operationName : "");
+
+        return json;
+    }
     /**
      *
      * @param query
@@ -84,7 +103,7 @@ public class GraphQLConnector {
         * Replaces line breaks with  blank spaces because the API apparently can't handle line breaks.
         * Because of this line you can just copy paste the query from GraphiQL.
         */
-        query = query.replace("\n", " ");
+//        query = query.replace("\n", " ");
         StringBuilder requestBuilder = new StringBuilder();
         requestBuilder.append("{\"query\":\"")
                 .append(query).append("\"")
@@ -113,55 +132,76 @@ public class GraphQLConnector {
         return requestString.getBytes();
     }
 
+    public JSONObject createRequest(String query, Map<String, String> variables, String operationName){
+        JSONObject json = createRequestJSON(query, variables, operationName);
+        return json;
+    }
+
+    public JSONObject sendRequest(JSONObject json){
+        try {
+            HttpsURLConnection connection = connectToAPI();
+//            connection.setRequestProperty("Content-Length", Integer.toString(requestData.length));
+            DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
+
+            dataOutputStream.write(json.toString().getBytes(StandardCharsets.UTF_8));
+            dataOutputStream.close();
+            return recieveResponse(connection);
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public JSONObject sendRequest(byte[] requestData) {
-        String responseMessage;
-        String responseStatus;
         try {
             HttpsURLConnection connection = connectToAPI();
             connection.setRequestProperty("Content-Length", Integer.toString(requestData.length));
             DataOutputStream dataOutputStream = new DataOutputStream(connection.getOutputStream());
             dataOutputStream.write(requestData);
             dataOutputStream.close();
-            Map<String, List<String>> responseHeaders = connection.getHeaderFields();
-            responseMessage = connection.getResponseMessage();
-            responseStatus = Integer.toString(connection.getResponseCode());
-            InputStream inputStream;
-            try {
-                inputStream = connection.getInputStream();
-            } catch (IOException e) {
-                inputStream = connection.getErrorStream();
-            }
-
-
-            if(connection.getResponseCode() >= 400){
-                int responseCode = connection.getResponseCode();
-                logger.error("Error while sending the Request - Respone Code: " + responseCode + " - " + (HttpStatus.resolve(responseCode) != null ? HttpStatus.resolve(responseCode).getReasonPhrase() : ""));
-                throw new IOException("Response code "+ responseCode + " - "+(HttpStatus.resolve(responseCode) != null ? HttpStatus.resolve(responseCode).getReasonPhrase() : "") + "\n"+
-                        "response message: "+ responseMessage + "\n" +
-                        "respone status: "+ responseStatus);
-            }
-
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-            JSONTokener tokener = new JSONTokener(bufferedReader);
-            JSONObject json = new JSONObject(tokener);
-
-            if(json.isNull("data")){
-                logger.error("Something went wrong processing the request.");
-                int responseCode = connection.getResponseCode();
-                throw new IOException("Response code "+ responseCode + " - "+(HttpStatus.resolve(responseCode) != null ? HttpStatus.resolve(responseCode).getReasonPhrase() : "") + "\n"+
-                        "response message: "+ responseMessage + "\n" +
-                        "response status: "+ responseStatus);
-            }
-            connection.disconnect();
-
-            return json;
-
+            return recieveResponse(connection);
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
             e.printStackTrace();
-
             return null;
         }
+    }
+
+    private JSONObject recieveResponse(HttpsURLConnection connection) throws IOException{
+        InputStream inputStream;
+        try {
+            inputStream = connection.getInputStream();
+        } catch (IOException e) {
+            inputStream = connection.getErrorStream();
+        }
+        String responseMessage;
+        String responseStatus;
+        Map<String, List<String>> responseHeaders = connection.getHeaderFields();
+        responseMessage = connection.getResponseMessage();
+        responseStatus = Integer.toString(connection.getResponseCode());
+        if(connection.getResponseCode() >= 400){
+            int responseCode = connection.getResponseCode();
+            logger.error("Error while sending the Request - Respone Code: " + responseCode + " - " + (HttpStatus.resolve(responseCode) != null ? HttpStatus.resolve(responseCode).getReasonPhrase() : ""));
+            throw new IOException("Response code "+ responseCode + " - "+(HttpStatus.resolve(responseCode) != null ? HttpStatus.resolve(responseCode).getReasonPhrase() : "") + "\n"+
+                    "response message: "+ responseMessage + "\n" +
+                    "respone status: "+ responseStatus);
+        }
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+        JSONTokener tokener = new JSONTokener(bufferedReader);
+        JSONObject json = new JSONObject(tokener);
+
+        if(json.isNull("data")){
+            logger.error("Something went wrong processing the request.");
+            int responseCode = connection.getResponseCode();
+            throw new IOException("Response code "+ responseCode + " - "+(HttpStatus.resolve(responseCode) != null ? HttpStatus.resolve(responseCode).getReasonPhrase() : "") + "\n"+
+                    "response message: "+ responseMessage + "\n" +
+                    "response status: "+ responseStatus);
+        }
+        connection.disconnect();
+
+        return json;
     }
 
 }
