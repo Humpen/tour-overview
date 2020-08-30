@@ -2,11 +2,10 @@ package de.hsbhv.touroverview.views.tour;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteAlias;
+import com.vaadin.flow.router.*;
 import de.hsbhv.touroverview.backend.graphql.QueryManager;
 import de.hsbhv.touroverview.leaflet.MapComponent;
 import de.hsbhv.touroverview.leaflet.MapLocation;
@@ -22,8 +21,8 @@ import java.net.MalformedURLException;
 @RouteAlias(value = "", layout = MainView.class)
 @PageTitle("Tour View")
 @CssImport("./styles/views/helloworld/hello-world-view.css")
-public class TourView extends HorizontalLayout {
-
+public class TourView extends HorizontalLayout implements HasUrlParameter<String> {
+    private String tourName;
     private TextField name;
     private Button sayHello;
     private MapComponent map;
@@ -62,6 +61,10 @@ public class TourView extends HorizontalLayout {
         QueryManager.getAllTours();
         JSONObject json = QueryManager.getAllToursAllDetails();
         System.out.println(json);
+        if(tourName != null){
+            JSONObject tour = QueryManager.getTourByName(tourName);
+            tour.get("data");
+        }
 //        setId("hello-world-view");
 //        name = new TextField("Your name");
 //        sayHello = new Button("Say hello");
@@ -72,4 +75,15 @@ public class TourView extends HorizontalLayout {
 //        });
     }
 
+    @Override
+    public void setParameter(BeforeEvent beforeEvent, @OptionalParameter String tourName) {
+        this.tourName = tourName;
+        if(tourName != null){
+            JSONObject tour = QueryManager.getTourByName(tourName);
+            if(tour!= null){
+                Notification.show("löppt");
+                tour.get("data");
+            }
+        }
+    }
 }

@@ -13,9 +13,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.RouteConfiguration;
-import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
@@ -35,7 +33,7 @@ import java.util.Optional;
 @PWA(name = "Tour Overview", shortName = "Tour Overview",  enableInstallPrompt = false)
 @Theme(value = Lumo.class, variant = Lumo.LIGHT)
 @CssImport("./styles/views/main/main-view.css")
-public class MainView extends AppLayout {
+public class MainView extends AppLayout implements HasUrlParameter {
 
     private final Tabs menu;
     private H1 viewTitle;
@@ -97,7 +95,7 @@ public class MainView extends AppLayout {
 
         for(int i = 0; i < tourArray.length(); ++i){
             JSONObject tour = tourArray.getJSONObject(i);
-            links[i] = new RouterLink(tour.getString("name"), TourView.class);
+            links[i] = new RouterLink(tour.getString("name"), TourView.class, tour.getString("name"));
         }
         links[links.length-1] = new RouterLink("About", AboutView.class);
 
@@ -136,5 +134,10 @@ public class MainView extends AppLayout {
 
     private String getCurrentPageTitle() {
         return getContent().getClass().getAnnotation(PageTitle.class).value();
+    }
+
+    @Override
+    public void setParameter(BeforeEvent beforeEvent, Object o) {
+
     }
 }

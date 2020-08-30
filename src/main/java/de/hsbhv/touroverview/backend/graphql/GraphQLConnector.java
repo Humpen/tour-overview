@@ -136,7 +136,7 @@ public class GraphQLConnector {
             if(connection.getResponseCode() >= 400){
                 int responseCode = connection.getResponseCode();
                 logger.error("Error while sending the Request - Respone Code: " + responseCode + " - " + (HttpStatus.resolve(responseCode) != null ? HttpStatus.resolve(responseCode).getReasonPhrase() : ""));
-                throw new IOException("Response code "+ responseCode + (HttpStatus.resolve(responseCode) != null ? HttpStatus.resolve(responseCode).getReasonPhrase() : "") + "\n"+
+                throw new IOException("Response code "+ responseCode + " - "+(HttpStatus.resolve(responseCode) != null ? HttpStatus.resolve(responseCode).getReasonPhrase() : "") + "\n"+
                         "response message: "+ responseMessage + "\n" +
                         "respone status: "+ responseStatus);
             }
@@ -148,7 +148,7 @@ public class GraphQLConnector {
             if(json.isNull("data")){
                 logger.error("Something went wrong processing the request.");
                 int responseCode = connection.getResponseCode();
-                throw new IOException("Response code "+ responseCode + (HttpStatus.resolve(responseCode) != null ? HttpStatus.resolve(responseCode).getReasonPhrase() : "") + "\n"+
+                throw new IOException("Response code "+ responseCode + " - "+(HttpStatus.resolve(responseCode) != null ? HttpStatus.resolve(responseCode).getReasonPhrase() : "") + "\n"+
                         "response message: "+ responseMessage + "\n" +
                         "response status: "+ responseStatus);
             }

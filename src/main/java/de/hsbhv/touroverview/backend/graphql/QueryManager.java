@@ -2,6 +2,9 @@ package de.hsbhv.touroverview.backend.graphql;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class QueryManager {
 
     public static JSONObject getAllTours(){
@@ -186,6 +189,26 @@ public class QueryManager {
                 "  }\n" +
                 "}";
         return graphQLConnector.sendRequest(graphQLConnector.createRequest(query));
+    }
+    //Funktioniert nicht - Die Scheiße...
+    public static JSONObject getTourByName(String name){
+        GraphQLConnector graphQLConnector = new GraphQLConnector();
+        String query = "query{\n" +
+                "  tour{\n" +
+                "    name\n" +
+                "    id\n" +
+                "    dauer\n" +
+                "    strecke\n" +
+                "    beschreibung{\n" +
+                "      html\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+        Map<String, String> variables = new HashMap<>();
+        variables.put("where:", "{name: \"" + name +"\"})");
+        return graphQLConnector.sendRequest(graphQLConnector.createRequest(query, variables));
+//        return graphQLConnector.sendRequest(graphQLConnector.createRequest(query));
+
     }
 
 
