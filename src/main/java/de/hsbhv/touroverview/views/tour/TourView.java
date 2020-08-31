@@ -1,75 +1,73 @@
 package de.hsbhv.touroverview.views.tour;
 
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
+import de.hsbhv.touroverview.backend.entities.Location;
+import de.hsbhv.touroverview.backend.entities.PointOfInterest;
 import de.hsbhv.touroverview.backend.entities.Tour;
 import de.hsbhv.touroverview.backend.entities.ToursData;
 import de.hsbhv.touroverview.backend.graphql.QueryManager;
-import de.hsbhv.touroverview.leaflet.MapComponent;
 import de.hsbhv.touroverview.leaflet.MapLocation;
 import de.hsbhv.touroverview.leaflet.MapLocationService;
 import de.hsbhv.touroverview.views.main.MainView;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
 
 @Route(value = "hello", layout = MainView.class)
 @RouteAlias(value = "", layout = MainView.class)
 @PageTitle("Tour View")
 @CssImport("./styles/views/helloworld/hello-world-view.css")
 public class TourView extends HorizontalLayout implements HasUrlParameter<String> {
-    private String tourName;
-    private TextField name;
-    private Button sayHello;
-    private MapComponent map;
-    private MapLocationService service;
-    @Autowired
-    public TourView(MapLocationService service){
 
-        HorizontalLayout horizontalLayout1 = new HorizontalLayout();
-        HorizontalLayout horizontalLayout2 = new HorizontalLayout();
-//        Grid grid = new Grid();
-//        grid.setSizeFull();
-//        horizontalLayout1.add(grid);
-        Button button = new Button();
-        button.addAttachListener(e -> map.addMarker(new MapLocation(53.53806892532847,8.57793047581791,"Weserstrandbad")));
-        horizontalLayout1.add(button);
-        this.service = service;
+    private MapLocationService service;
+    private Tour tour;
+    @Autowired
+    public TourView(MapLocationService mapLocationService){
+        this.service = mapLocationService;
+        init();
+    }
+
+    private void init() {
         setSizeFull();
         setPadding(false);
         setSpacing(false);
-        horizontalLayout1.setSpacing(false);
-        horizontalLayout1.setPadding(false);
-        horizontalLayout1.setSizeFull();
-        horizontalLayout2.setSpacing(false);
-        horizontalLayout2.setPadding(false);
-        horizontalLayout2.setSizeFull();
-        map = new MapComponent();
-        map.addMarkersAndZoom(service.getAll());
-        horizontalLayout2.add(map);
-        add(horizontalLayout1, horizontalLayout2);
-        QueryManager.getAllTours();
-        JSONObject json = QueryManager.getAllToursAllDetails();
-        System.out.println(json);
+
+        add(new TourGrid(tour));
+        add(new MapView(this.service));
     }
 
-    //TODO testweise das JSON Mapping eingebaut. Muss noch in GUI eingesetzt werden.
+    //TODO Variable tourName liefert nicht den erwarteten String. Bsp.: Anstatt von Tour 1 wird Tour%201 übergeben.
+
+    /**
+     * Verhalten ist nicht konsistent bei tourName. Anscheinend machen wir es hier falsch. Wir können uns wohl nicht auf den Parameter verlassen.
+     * https://vaadin.com/forum/thread/17321464/access-url-parameter-from-route-layout
+     * https://stackoverflow.com/questions/60058913/adapting-url-query-parameters-when-navigating-between-views-in-vaadin-flow
+     * Da könnte ne Lösung dabei sein, aber ich leg mich für heute schlafen
+     */
     @Override
     public void setParameter(BeforeEvent beforeEvent, @OptionalParameter String tourName) {
-        this.tourName = tourName;
+        List<PointOfInterest> pointOfInterestList = null;
         if(tourName != null){
-        JSONObject tour = QueryManager.getTourByName(tourName);
-            Tour tour1 = QueryManager.mapJsonToObject(tour, Tour.class, Tour.class.getSimpleName());
+            JSONObject jsonTour = QueryManager.getTourByName(tourName);
+            tour = QueryManager.mapJsonToObject(jsonTour, Tour.class, Tour.class.getSimpleName());
+            if(tour != null) {
+                pointOfInterestList = tour.getPlaceOfInterests();
+            }
+            if(pointOfInterestList != null) {
+                for (PointOfInterest poi : pointOfInterestList) {
+                    Location location = poi.getPosition();
+                    service.addSpot(new MapLocation(location.getLatitude(), location.longitude, poi.getName()));
+                }
+            }
             JSONObject tours = QueryManager.getAllTours();
             ToursData toursData = QueryManager.mapJsonToObject(tours, ToursData.class);
-            if(tour!= null){
-                Notification.show("löppt");
-                System.out.println(tour.get("data"));
-            }
+//            if(jsonTour!= null){
+//                Notification.show("löppt");
+//                System.out.println(jsonTour.get("data"));
+//            }
         }
     }
 }
