@@ -6,6 +6,8 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
+import de.hsbhv.touroverview.backend.entities.Tour;
+import de.hsbhv.touroverview.backend.entities.ToursData;
 import de.hsbhv.touroverview.backend.graphql.QueryManager;
 import de.hsbhv.touroverview.leaflet.MapComponent;
 import de.hsbhv.touroverview.leaflet.MapLocation;
@@ -13,8 +15,6 @@ import de.hsbhv.touroverview.leaflet.MapLocationService;
 import de.hsbhv.touroverview.views.main.MainView;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.net.MalformedURLException;
 
 
 @Route(value = "hello", layout = MainView.class)
@@ -28,7 +28,7 @@ public class TourView extends HorizontalLayout implements HasUrlParameter<String
     private MapComponent map;
     private MapLocationService service;
     @Autowired
-    public TourView(MapLocationService service) throws MalformedURLException {
+    public TourView(MapLocationService service){
 
         HorizontalLayout horizontalLayout1 = new HorizontalLayout();
         HorizontalLayout horizontalLayout2 = new HorizontalLayout();
@@ -52,34 +52,20 @@ public class TourView extends HorizontalLayout implements HasUrlParameter<String
         map.addMarkersAndZoom(service.getAll());
         horizontalLayout2.add(map);
         add(horizontalLayout1, horizontalLayout2);
-//        add(map);
-/*        try {
-            new TourQuery().getTourByName("null");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }*/
         QueryManager.getAllTours();
         JSONObject json = QueryManager.getAllToursAllDetails();
         System.out.println(json);
-/*        if(tourName != null){
-            JSONObject tour = QueryManager.getTourByName(tourName);
-            tour.get("data");
-        }*/
-//        setId("hello-world-view");
-//        name = new TextField("Your name");
-//        sayHello = new Button("Say hello");
-//        add(name, sayHello);
-//        setVerticalComponentAlignment(Alignment.END, name, sayHello);
-//        sayHello.addClickListener( e-> {
-//            Notification.show("Hello " + name.getValue());
-//        });
     }
 
+    //TODO testweise das JSON Mapping eingebaut. Muss noch in GUI eingesetzt werden.
     @Override
     public void setParameter(BeforeEvent beforeEvent, @OptionalParameter String tourName) {
         this.tourName = tourName;
         if(tourName != null){
-            JSONObject tour = QueryManager.getTourByName(tourName);
+        JSONObject tour = QueryManager.getTourByName(tourName);
+            Tour tour1 = QueryManager.mapJsonToObject(tour, Tour.class, Tour.class.getSimpleName());
+            JSONObject tours = QueryManager.getAllTours();
+            ToursData toursData = QueryManager.mapJsonToObject(tours, ToursData.class);
             if(tour!= null){
                 Notification.show("löppt");
                 System.out.println(tour.get("data"));
