@@ -190,7 +190,7 @@ public class QueryManager {
                 "}";
         return graphQLConnector.sendRequest(graphQLConnector.createRequest(query, null, ""));
     }
-    //Funktioniert nicht - Die Scheiße...
+    //Funktioniert endlich - Die Scheiße...
     public static JSONObject getTourByName(){
         GraphQLConnector graphQLConnector = new GraphQLConnector();
         String query = "query MyQuery{\n" +
@@ -238,11 +238,35 @@ public class QueryManager {
                 "\n";
         Map<String, String> variables = new HashMap<>();
         variables.put("names", "Tour 1");
-//        return graphQLConnector.sendRequest(graphQLConnector.createRequest(query, variables));
         return graphQLConnector.sendRequest(graphQLConnector.createRequest(query, variables, ""));
     }
 
+    /**
+     * Maps a JSON object to the specified Object with GSON.
+     * @param json JSON object from query
+     * @param msgClass Class which should be mapped to
+     * @param className Classname of {@param msgClass} is only needed if their are nested objects and no variable available to map. Something like:
+     *                  {"data":
+     *                  {"tour":
+     *                    someVariables }}
+     * @param <T> is {@param msgClass}
+     * @return return type is {@param msgClass}
+     */
+    public static  <T> T mapJsonToObject(JSONObject json ,Class msgClass, String className) {
+        className = className.toLowerCase();
+        json = (JSONObject) json.get("data");
+        return (T) MessageUtil.createFromJson(json.get(className).toString(), msgClass);
+    }
 
-
-
+    /**
+     * Maps a JSON object to the specified Object with GSON.
+     * @param json JSON object from query
+     * @param msgClass Class which should be mapped to
+     * @param <T> is {@param msgClass}
+     * @return return type is {@param msgClass}
+     */
+    public static  <T> T mapJsonToObject(JSONObject json ,Class msgClass) {
+        json = (JSONObject) json.get("data");
+        return (T) MessageUtil.createFromJson(json.toString(), msgClass);
+    }
 }
