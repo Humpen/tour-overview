@@ -2,6 +2,8 @@ package de.hsbhv.touroverview.backend.entities;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Message class for a tour
  */
@@ -17,6 +19,17 @@ public class Tour {
     public int duration;
     @SerializedName("strecke")
     public double routeLength;
+    @SerializedName("sehenswuerdigkeiten")
+    public List<PointOfInterest> pointOfInterests;
+
+    public List<PointOfInterest> getPlaceOfInterests() {
+        return pointOfInterests;
+    }
+
+    public void setPlaceOfInterests(List<PointOfInterest> pointOfInterests) {
+        this.pointOfInterests = pointOfInterests;
+    }
+
 
     public Location getStartingPoint() {
         return startingPoint;

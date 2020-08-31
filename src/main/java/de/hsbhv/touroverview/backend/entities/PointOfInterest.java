@@ -3,17 +3,17 @@ package de.hsbhv.touroverview.backend.entities;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Message class for a place of interest. ("Sehenswürdigkeit")
+ * Message class for a point of interest. ("Sehenswürdigkeit")
  */
 
-public class PlaceOfInterest {
+public class PointOfInterest {
     public String tour;
     public String name;
     public Location position;
     public int radius;
     public String infoText;
     @SerializedName("naechsteSehenswurdigkeit")
-    public PlaceOfInterest nextPOI;
+    public PointOfInterest nextPOI;
 
     public String getTour() {
         return tour;
@@ -55,11 +55,11 @@ public class PlaceOfInterest {
         this.infoText = infoText;
     }
 
-    public PlaceOfInterest getNextPOI() {
+    public PointOfInterest getNextPOI() {
         return nextPOI;
     }
 
-    public void setNextPOI(PlaceOfInterest nextPOI) {
+    public void setNextPOI(PointOfInterest nextPOI) {
         this.nextPOI = nextPOI;
     }
 }

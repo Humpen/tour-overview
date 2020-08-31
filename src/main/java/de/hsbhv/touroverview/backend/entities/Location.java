@@ -4,32 +4,31 @@ package de.hsbhv.touroverview.backend.entities;
  * Message class for a location
  */
 public class Location {
-    public long distance;
-    public long latitude;
-    public long longitude;
+    public double distance;
+    public double latitude;
+    public double longitude;
 
-    public long getDistance() {
+    public double getDistance() {
         return distance;
     }
 
-    public void setDistance(long distance) {
+    public void setDistance(double distance) {
         this.distance = distance;
     }
 
-    public long getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(long latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public long getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(long longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
-
 }
