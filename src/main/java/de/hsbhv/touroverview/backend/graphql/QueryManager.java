@@ -233,11 +233,18 @@ public class QueryManager {
                 "    beschreibung{\n" +
                 "      html\n" +
                 "    }\n" +
-                "  }\n" +
+                "    sehenswuerdigkeiten{\n"+
+                "       name\n"+
+                "       position{\n"+
+                "           longitude\n"+
+                "           latitude\n"+
+                "           }\n"+
+                "       }\n"+
+                "   }\n" +
                 "}\n" +
                 "\n";
         Map<String, String> variables = new HashMap<>();
-        variables.put("names", "Tour 1");
+        variables.put("names", name);
         return graphQLConnector.sendRequest(graphQLConnector.createRequest(query, variables, ""));
     }
 
