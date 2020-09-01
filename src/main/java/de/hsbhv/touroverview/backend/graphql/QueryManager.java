@@ -249,6 +249,37 @@ public class QueryManager {
     }
 
     /**
+     * Responds a json object which contains the specific tour
+     * @param id Id of the tour
+     * @return
+     */
+    public static JSONObject getTourById(String id){
+        GraphQLConnector graphQLConnector = new GraphQLConnector();
+        String query = "query($tourId:ID){\n" +
+                "  tour(where: {id: $tourId}){\n" +
+                "    name\n" +
+                "    id\n" +
+                "    dauer\n" +
+                "    strecke\n" +
+                "    beschreibung{\n" +
+                "      html\n" +
+                "    }\n" +
+                "    sehenswuerdigkeiten{\n"+
+                "       name\n"+
+                "       position{\n"+
+                "           longitude\n"+
+                "           latitude\n"+
+                "           }\n"+
+                "       }\n"+
+                "   }\n" +
+                "}\n" +
+                "\n";
+        Map<String, String> variables = new HashMap<>();
+        variables.put("tourId", id);
+        return graphQLConnector.sendRequest(graphQLConnector.createRequest(query, variables, ""));
+    }
+
+    /**
      * Maps a JSON object to the specified Object with GSON.
      * @param json JSON object from query
      * @param msgClass Class which should be mapped to
