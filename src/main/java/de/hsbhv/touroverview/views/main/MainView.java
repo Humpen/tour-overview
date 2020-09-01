@@ -33,7 +33,7 @@ import java.util.Optional;
 @PWA(name = "Tour Overview", shortName = "Tour Overview",  enableInstallPrompt = false)
 @Theme(value = Lumo.class, variant = Lumo.LIGHT)
 @CssImport("./styles/views/main/main-view.css")
-public class MainView extends AppLayout implements HasUrlParameter {
+public class MainView extends AppLayout implements HasUrlParameter<String> {
 
     private final Tabs menu;
     private H1 viewTitle;
@@ -95,7 +95,7 @@ public class MainView extends AppLayout implements HasUrlParameter {
 
         for(int i = 0; i < tourArray.length(); ++i){
             JSONObject tour = tourArray.getJSONObject(i);
-            links[i] = new RouterLink(tour.getString("name"), TourView.class, tour.getString("name"));
+            links[i] = new RouterLink(tour.getString("name"), TourView.class, tour.getString("name").replace(" ","_"));
         }
         links[links.length-1] = new RouterLink("About", AboutView.class);
 
@@ -137,7 +137,6 @@ public class MainView extends AppLayout implements HasUrlParameter {
     }
 
     @Override
-    public void setParameter(BeforeEvent beforeEvent, Object o) {
-
+    public void setParameter(BeforeEvent beforeEvent, String o) {
     }
 }

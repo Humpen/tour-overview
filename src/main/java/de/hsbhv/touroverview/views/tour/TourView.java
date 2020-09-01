@@ -27,10 +27,10 @@ public class TourView extends HorizontalLayout implements HasUrlParameter<String
     @Autowired
     public TourView(MapLocationService mapLocationService){
         this.service = mapLocationService;
-        init();
     }
 
     private void init() {
+        removeAll();
         setSizeFull();
         setPadding(false);
         setSpacing(false);
@@ -46,9 +46,13 @@ public class TourView extends HorizontalLayout implements HasUrlParameter<String
      * https://vaadin.com/forum/thread/17321464/access-url-parameter-from-route-layout
      * https://stackoverflow.com/questions/60058913/adapting-url-query-parameters-when-navigating-between-views-in-vaadin-flow
      * Da könnte ne Lösung dabei sein, aber ich leg mich für heute schlafen
+     *
+     * Problem liegt im Leerzeichen von "Tour n" der wandelt das Leerzeichen um. Einzige Lösung die bisher zuverlässig
+     * funktioniert ist das Leerzeichen gegen "_" zu ersetzen und für die Query zurück zu konvertieren.
      */
     @Override
     public void setParameter(BeforeEvent beforeEvent, @OptionalParameter String tourName) {
+        tourName = tourName.replace("_", " ");
         List<PointOfInterest> pointOfInterestList = null;
         if(tourName != null){
             JSONObject jsonTour = QueryManager.getTourByName(tourName);
@@ -69,5 +73,6 @@ public class TourView extends HorizontalLayout implements HasUrlParameter<String
 //                System.out.println(jsonTour.get("data"));
 //            }
         }
+    init();
     }
 }
