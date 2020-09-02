@@ -45,6 +45,11 @@ public class TourGrid extends HorizontalLayout {
         }
         this.tour = tour;
         this.poi = tour.getPlaceOfInterests();
+        
+        if(grid == null) {
+            createGrid();
+            return;
+        }
         grid.setItems(poi);
     }
 }

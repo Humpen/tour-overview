@@ -21,7 +21,7 @@ public class MapView extends HorizontalLayout {
         add(map);
     }
 
-    public void updateMapVieww(MapLocationService mapLocationService) {
+    public void updateMapView(MapLocationService mapLocationService) {
         if(mapLocationService == null) {
             return;
         }

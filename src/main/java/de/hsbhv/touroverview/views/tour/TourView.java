@@ -6,7 +6,6 @@ import com.vaadin.flow.router.*;
 import de.hsbhv.touroverview.backend.entities.Location;
 import de.hsbhv.touroverview.backend.entities.PointOfInterest;
 import de.hsbhv.touroverview.backend.entities.Tour;
-import de.hsbhv.touroverview.backend.entities.ToursData;
 import de.hsbhv.touroverview.backend.graphql.QueryManager;
 import de.hsbhv.touroverview.leaflet.MapLocation;
 import de.hsbhv.touroverview.leaflet.MapLocationService;
@@ -44,7 +43,7 @@ public class TourView extends HorizontalLayout implements HasUrlParameter<String
         if(mapView == null) {
             add(mapView = new MapView(this.service));
         } {
-            mapView.updateMapVieww(service);
+            mapView.updateMapView(service);
         }
     }
 
@@ -76,8 +75,8 @@ public class TourView extends HorizontalLayout implements HasUrlParameter<String
                     service.addSpot(new MapLocation(location.getLatitude(), location.longitude, poi.getName()));
                 }
             }
-            JSONObject tours = QueryManager.getAllTours();
-            ToursData toursData = QueryManager.mapJsonToObject(tours, ToursData.class);
+//            JSONObject tours = QueryManager.getAllTours();
+//            ToursData toursData = QueryManager.mapJsonToObject(tours, ToursData.class);
 //            if(jsonTour!= null){
 //                Notification.show("löppt");
 //                System.out.println(jsonTour.get("data"));
