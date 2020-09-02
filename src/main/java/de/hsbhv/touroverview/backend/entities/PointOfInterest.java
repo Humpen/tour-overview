@@ -62,4 +62,11 @@ public class PointOfInterest {
     public void setNextPOI(PointOfInterest nextPOI) {
         this.nextPOI = nextPOI;
     }
+
+    public Double getLatitude() {
+        return position.getLatitude();
+    }
+    public Double getLongitude(){
+        return position.getLongitude();
+    }
 }
