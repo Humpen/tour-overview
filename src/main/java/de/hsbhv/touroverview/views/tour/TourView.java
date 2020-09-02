@@ -24,19 +24,28 @@ public class TourView extends HorizontalLayout implements HasUrlParameter<String
 
     private MapLocationService service;
     private Tour tour;
+    private MapView mapView;
+    private TourGrid tourGrid;
     @Autowired
     public TourView(MapLocationService mapLocationService){
         this.service = mapLocationService;
     }
 
     private void init() {
-        removeAll();
         setSizeFull();
         setPadding(false);
         setSpacing(false);
 
-        add(new TourGrid(tour));
-        add(new MapView(this.service));
+        if(tourGrid == null) {
+            add(tourGrid = new TourGrid(tour));
+        } else {
+            tourGrid.updateTourGrid(tour);
+        }
+        if(mapView == null) {
+            add(mapView = new MapView(this.service));
+        } {
+            mapView.updateMapVieww(service);
+        }
     }
 
     //TODO Variable tourName liefert nicht den erwarteten String. Bsp.: Anstatt von Tour 1 wird Tour%201 übergeben.
@@ -61,6 +70,7 @@ public class TourView extends HorizontalLayout implements HasUrlParameter<String
                 pointOfInterestList = tour.getPlaceOfInterests();
             }
             if(pointOfInterestList != null) {
+                service.removeAllSpots();
                 for (PointOfInterest poi : pointOfInterestList) {
                     Location location = poi.getPosition();
                     service.addSpot(new MapLocation(location.getLatitude(), location.longitude, poi.getName()));

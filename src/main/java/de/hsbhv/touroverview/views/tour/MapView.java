@@ -6,6 +6,8 @@ import de.hsbhv.touroverview.leaflet.MapLocationService;
 
 public class MapView extends HorizontalLayout {
 
+    private MapComponent map;
+    private MapLocationService service;
     public MapView(MapLocationService mapLocationService) {
          init(mapLocationService);
     }
@@ -13,8 +15,18 @@ public class MapView extends HorizontalLayout {
         setSizeFull();
         setSpacing(false);
         setPadding(false);
-        MapComponent map = new MapComponent();
-        map.addMarkersAndZoom(mapLocationService.getAll());
+        this.service = mapLocationService;
+        map = new MapComponent();
+        map.addMarkersAndZoom(service.getAll());
         add(map);
+    }
+
+    public void updateMapVieww(MapLocationService mapLocationService) {
+        if(mapLocationService == null) {
+            return;
+        }
+        this.service = mapLocationService;
+        map.removeAllMarker();
+        map.addMarkersAndZoom(service.getAll());
     }
 }
