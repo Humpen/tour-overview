@@ -1,7 +1,7 @@
 package de.hsbhv.touroverview.leaflet;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.annotation.ApplicationScope;
+import org.springframework.web.context.annotation.SessionScope;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,20 +12,11 @@ import java.util.List;
  * users.
  */
 @Service
-@ApplicationScope
+@SessionScope
 public class MapLocationService {
 
     private List<MapLocation> spots = new ArrayList<MapLocation>();
 
-//    @PostConstruct
-//    private void init() {
-//
-//        // Add some demo data
-//
-//        spots.add(new MapLocation(60.465071, 22.302923, "Halistenkoski"));
-//        spots.add(new MapLocation(60.479928, 21.328347, "Kustavi"));
-//        spots.add(new MapLocation(60.124169, 21.906335, "Kirjais"));
-//    }
 
     public List<MapLocation> getAll() {
 
@@ -35,13 +26,14 @@ public class MapLocationService {
     public void addSpot(MapLocation spot) {
 
         // protect concurrent access since MapLocationService is a singleton
-        synchronized (spots) {
 
             spots.add(spot);
 
             if (spots.size() > 100) {
                 spots.remove(0);
             }
-        }
+    }
+    public void removeAllSpots(){
+            spots = new ArrayList<>();
     }
 }

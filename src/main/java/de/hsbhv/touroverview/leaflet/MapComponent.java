@@ -1,25 +1,18 @@
 package de.hsbhv.touroverview.leaflet;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-
-import com.vaadin.flow.component.ComponentEvent;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.DomEvent;
-import com.vaadin.flow.component.EventData;
-import com.vaadin.flow.component.HasSize;
-import com.vaadin.flow.component.Tag;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.polymertemplate.PolymerTemplate;
 import com.vaadin.flow.shared.Registration;
 import com.vaadin.flow.templatemodel.TemplateModel;
-
 import elemental.json.Json;
 import elemental.json.JsonArray;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Simple custom (web) component wrapper for the LeafletJS map.
@@ -113,6 +106,10 @@ public class MapComponent extends PolymerTemplate<TemplateModel> implements HasS
 
         // call client side to actually add marker
         getElement().callJsFunction("addMarker", spot.getLatitude(), spot.getLongitude(), spot.getName(), nextMarkerId++);
+    }
+
+    public void removeAllMarker(){
+        getElement().callJsFunction("removeAllMarkers");
     }
 
     /**
