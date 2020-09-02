@@ -52,9 +52,9 @@ public class TourView extends HorizontalLayout implements HasUrlParameter<String
      */
     @Override
     public void setParameter(BeforeEvent beforeEvent, @OptionalParameter String tourName) {
-        tourName = tourName.replace("_", " ");
         List<PointOfInterest> pointOfInterestList = null;
         if(tourName != null){
+            tourName = tourName.replace("_", " ");
             JSONObject jsonTour = QueryManager.getTourByName(tourName);
             tour = QueryManager.mapJsonToObject(jsonTour, Tour.class, Tour.class.getSimpleName());
             if(tour != null) {
