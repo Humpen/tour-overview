@@ -205,39 +205,26 @@ public class QueryManager {
                 "  }\n" +
                 "}";
         Map<String, String> variables = new HashMap<>();
-//        variables.put("where:", "name: " + name +"})");
-//        return graphQLConnector.sendRequest(graphQLConnector.createRequest(query, variables));
         return graphQLConnector.sendRequest(graphQLConnector.createRequest(query));
 
     }
     //Löppt der Lachs
     public static JSONObject getTourByName(String name){
         GraphQLConnector graphQLConnector = new GraphQLConnector();
-        String query = "query MyQuery{\n" +
-                "  tour (where: {\"name\": \"Tour 1\"}) {\n" +
-                "    name\n" +
-                "    id\n" +
-                "    dauer\n" +
-                "    strecke\n" +
-                "    beschreibung{\n" +
-                "      html\n" +
-                "    }\n" +
-                "  }\n" +
-                "}";
-        query = "query($names:String){\n" +
+        String query = "query($names:String){\n" +
                 "  tour(where: {name: $names}){\n" +
                 "    name\n" +
                 "    id\n" +
                 "    dauer\n" +
                 "    strecke\n" +
-                "    beschreibung{\n" +
-                "      html\n" +
-                "    }\n" +
                 "    sehenswuerdigkeiten{\n"+
                 "       name\n"+
                 "       position{\n"+
                 "           longitude\n"+
                 "           latitude\n"+
+                "           }\n"+
+                "        infoText{\n" +
+                "           text\n"+
                 "           }\n"+
                 "       }\n"+
                 "   }\n" +
@@ -261,14 +248,14 @@ public class QueryManager {
                 "    id\n" +
                 "    dauer\n" +
                 "    strecke\n" +
-                "    beschreibung{\n" +
-                "      html\n" +
-                "    }\n" +
                 "    sehenswuerdigkeiten{\n"+
                 "       name\n"+
                 "       position{\n"+
                 "           longitude\n"+
                 "           latitude\n"+
+                "           }\n"+
+                "        infoText{\n" +
+                "           text\n"+
                 "           }\n"+
                 "       }\n"+
                 "   }\n" +

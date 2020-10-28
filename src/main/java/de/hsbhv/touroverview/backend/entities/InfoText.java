@@ -2,10 +2,7 @@ package de.hsbhv.touroverview.backend.entities;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Description {
-    @SerializedName("text")
-    public String description;
-
+public class InfoText {
     public String getDescription() {
         return description;
     }
@@ -13,4 +10,7 @@ public class Description {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @SerializedName("text")
+    public String description;
 }

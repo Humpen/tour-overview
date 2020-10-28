@@ -11,7 +11,7 @@ public class PointOfInterest {
     public String name;
     public Location position;
     public int radius;
-    public String infoText;
+    public InfoText infoText;
     @SerializedName("naechsteSehenswurdigkeit")
     public PointOfInterest nextPOI;
 
@@ -47,11 +47,14 @@ public class PointOfInterest {
         this.radius = radius;
     }
 
-    public String getInfoText() {
+    public InfoText getInfoText() {
         return infoText;
     }
+    public String getInfoTextString() {
+        return getInfoText() != null ? getInfoText().getDescription() : "";
+    }
 
-    public void setInfoText(String infoText) {
+    public void setInfoText(InfoText infoText) {
         this.infoText = infoText;
     }
 
