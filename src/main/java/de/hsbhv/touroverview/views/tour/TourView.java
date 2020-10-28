@@ -15,8 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-@Route(value = "hello", layout = MainView.class)
-@RouteAlias(value = "", layout = MainView.class)
+//@Route(value = "hello", layout = MainView.class)
+@Route(value = "", layout = MainView.class)
 @PageTitle("Tour View")
 @CssImport("./styles/views/helloworld/hello-world-view.css")
 public class TourView extends HorizontalLayout implements HasUrlParameter<String> {
@@ -62,9 +62,18 @@ public class TourView extends HorizontalLayout implements HasUrlParameter<String
     public void setParameter(BeforeEvent beforeEvent, @OptionalParameter String tourName) {
         List<PointOfInterest> pointOfInterestList = null;
         if(tourName != null){
+            tourName = tourName.replace("+", "-");
             tourName = tourName.replace("_", " ");
+            tourName = tourName.replace("oe", "ö");
+            tourName = tourName.replace( "ue", "ü");
+            tourName = tourName.replace("ae", "ä");
+            tourName = tourName.replace("OE","Ö");
+            tourName = tourName.replace("UE", "Ü");
+            tourName = tourName.replace("AE", "Ä");
             JSONObject jsonTour = QueryManager.getTourByName(tourName);
-            tour = QueryManager.mapJsonToObject(jsonTour, Tour.class, Tour.class.getSimpleName());
+            if(jsonTour != null) {
+                tour = QueryManager.mapJsonToObject(jsonTour, Tour.class, Tour.class.getSimpleName());
+            }
             if(tour != null) {
                 pointOfInterestList = tour.getPlaceOfInterests();
             }
@@ -75,12 +84,6 @@ public class TourView extends HorizontalLayout implements HasUrlParameter<String
                     service.addSpot(new MapLocation(location.getLatitude(), location.longitude, poi.getName()));
                 }
             }
-//            JSONObject tours = QueryManager.getAllTours();
-//            ToursData toursData = QueryManager.mapJsonToObject(tours, ToursData.class);
-//            if(jsonTour!= null){
-//                Notification.show("löppt");
-//                System.out.println(jsonTour.get("data"));
-//            }
         }
     init();
     }

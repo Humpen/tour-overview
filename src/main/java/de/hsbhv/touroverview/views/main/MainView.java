@@ -1,12 +1,20 @@
 package de.hsbhv.touroverview.views.main;
 
+import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.IronIcon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -55,10 +63,99 @@ public class MainView extends AppLayout implements HasUrlParameter<String> {
         layout.add(new DrawerToggle());
         viewTitle = new H1();
         layout.add(viewTitle);
-        layout.add(new Image("images/user.svg", "Avatar"));
+        layout.add(createFeedbackButton());
+//        layout.add(new Image("images/user.svg", "Avatar"));
         return layout;
     }
 
+    private Component createFeedbackButton() {
+        Button button = new Button("Tour Feedback");
+        button.getElement().getStyle().set("margin-left", "auto");
+        button.addClickListener(this::showFeedback);
+        return button;
+    }
+    //TODO Bewertung aus dem CMS holen. Scheint anderes Datenmodell zu sein.
+    private void showFeedback(ClickEvent clickEvent){
+        UI.getCurrent().getPage().executeJs("return window.location.pathname").then(String.class, location -> {
+//            location = location.substring(1);
+//            location = location.replace("_"," ");
+//            JSONObject jsonTour = QueryManager.getTourByName(location);
+//            Tour tour = QueryManager.mapJsonToObject(jsonTour, Tour.class, Tour.class.getSimpleName());
+            Dialog dialog = new Dialog();
+            dialog.add(createCard());
+            dialog.add(createCard());
+            dialog.add(createCard());
+            dialog.add(createCard());
+            dialog.add(createCard());
+            dialog.add(createCard());
+            dialog.add(createCard());
+            dialog.add(createCard());
+            dialog.add(createCard());
+            dialog.add(createCard());
+            dialog.add(createCard());
+            dialog.add(createCard());
+            dialog.add(createCard());
+            dialog.add(createCard());
+            dialog.add(createCard());
+            dialog.add(createCard());
+            dialog.add(createCard());
+            dialog.add(createCard());
+            dialog.add(createCard());
+            dialog.open();
+        });
+    }
+
+    private HorizontalLayout createCard() {
+        HorizontalLayout card = new HorizontalLayout();
+        card.addClassName("card");
+        card.setSpacing(false);
+        card.getThemeList().add("spacing-s");
+
+        Icon icon = new Icon(VaadinIcon.STAR);
+        Icon icon2 = new Icon(VaadinIcon.STAR);
+        Icon icon3 = new Icon(VaadinIcon.STAR);
+        Icon icon4 = new Icon(VaadinIcon.STAR);
+        Icon icon5 = new Icon(VaadinIcon.STAR);
+        VerticalLayout description = new VerticalLayout();
+        description.addClassName("description");
+        description.setSpacing(false);
+        description.setPadding(false);
+
+        HorizontalLayout header = new HorizontalLayout();
+        header.addClassName("header");
+        header.setSpacing(false);
+        header.getThemeList().add("spacing-s");
+
+        Span name = new Span("person.getName()");
+        name.addClassName("name");
+        Span date = new Span("person.getDate()");
+        date.addClassName("date");
+        header.add(name, date);
+
+        Span post = new Span("person.getPost()");
+        post.addClassName("post");
+
+        HorizontalLayout actions = new HorizontalLayout();
+        actions.addClassName("actions");
+        actions.setSpacing(false);
+        actions.getThemeList().add("spacing-s");
+
+        IronIcon likeIcon = new IronIcon("vaadin", "heart");
+        Span likes = new Span("10");
+        likes.addClassName("likes");
+        IronIcon commentIcon = new IronIcon("vaadin", "comment");
+        Span comments = new Span("5");
+        comments.addClassName("comments");
+        IronIcon shareIcon = new IronIcon("vaadin", "connect");
+        Span shares = new Span("1");
+        shares.addClassName("shares");
+
+        actions.add(likeIcon, likes, commentIcon, comments, shareIcon, shares);
+
+        description.add(header, post, actions);
+        card.add(icon,icon2,icon3,icon4,icon5, description);
+        return card;
+    }
     private Component createDrawerContent(Tabs menu) {
         VerticalLayout layout = new VerticalLayout();
         layout.setSizeFull();
@@ -95,7 +192,16 @@ public class MainView extends AppLayout implements HasUrlParameter<String> {
 
         for(int i = 0; i < tourArray.length(); ++i){
             JSONObject tour = tourArray.getJSONObject(i);
-            links[i] = new RouterLink(tour.getString("name"), TourView.class, tour.getString("name").replace(" ","_"));
+            String tourName= tour.getString("name");
+            String tourID = tour.getString("id");
+            tourName = tourName.replace("–", "+");
+            tourName = tourName.replace( "ö", "oe");
+            tourName = tourName.replace( "ü" ,"ue");
+            tourName = tourName.replace("ä", "ae");
+            tourName = tourName.replace("Ö","OE");
+            tourName = tourName.replace("Ü", "UE");
+            tourName = tourName.replace("Ä", "AE");
+            links[i] = new RouterLink(tour.getString("name"), TourView.class, tourName = tourName.replace(" ","_"));
         }
         links[links.length-1] = new RouterLink("About", AboutView.class);
 
