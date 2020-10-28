@@ -194,14 +194,7 @@ public class MainView extends AppLayout implements HasUrlParameter<String> {
             JSONObject tour = tourArray.getJSONObject(i);
             String tourName= tour.getString("name");
             String tourID = tour.getString("id");
-            tourName = tourName.replace("–", "+");
-            tourName = tourName.replace( "ö", "oe");
-            tourName = tourName.replace( "ü" ,"ue");
-            tourName = tourName.replace("ä", "ae");
-            tourName = tourName.replace("Ö","OE");
-            tourName = tourName.replace("Ü", "UE");
-            tourName = tourName.replace("Ä", "AE");
-            links[i] = new RouterLink(tour.getString("name"), TourView.class, tourName = tourName.replace(" ","_"));
+            links[i] = new RouterLink(tourName, TourView.class,tourID);
         }
         links[links.length-1] = new RouterLink("About", AboutView.class);
 

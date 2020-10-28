@@ -59,18 +59,10 @@ public class TourView extends HorizontalLayout implements HasUrlParameter<String
      * funktioniert ist das Leerzeichen gegen "_" zu ersetzen und für die Query zurück zu konvertieren.
      */
     @Override
-    public void setParameter(BeforeEvent beforeEvent, @OptionalParameter String tourName) {
+    public void setParameter(BeforeEvent beforeEvent, @OptionalParameter String tourId) {
         List<PointOfInterest> pointOfInterestList = null;
-        if(tourName != null){
-            tourName = tourName.replace("+", "-");
-            tourName = tourName.replace("_", " ");
-            tourName = tourName.replace("oe", "ö");
-            tourName = tourName.replace( "ue", "ü");
-            tourName = tourName.replace("ae", "ä");
-            tourName = tourName.replace("OE","Ö");
-            tourName = tourName.replace("UE", "Ü");
-            tourName = tourName.replace("AE", "Ä");
-            JSONObject jsonTour = QueryManager.getTourByName(tourName);
+        if(tourId != null){
+            JSONObject jsonTour = QueryManager.getTourById(tourId);
             if(jsonTour != null) {
                 tour = QueryManager.mapJsonToObject(jsonTour, Tour.class, Tour.class.getSimpleName());
             }
