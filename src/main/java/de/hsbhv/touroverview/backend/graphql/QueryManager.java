@@ -211,9 +211,10 @@ public class QueryManager {
     public static JSONObject getFeedbackById(String id){
         GraphQLConnector graphQLConnector = new GraphQLConnector();
         String query = "query($id:ID){\n" +
-                "            bewertungen(where: {tour: {id:$id}}){\n" +
+                "            bewertungen(where: {tour: {id:$id}}, stage:DRAFT){\n" +
                 "                value\n" +
                 "                feedback\n" +
+                "                createdAt\n" +
                 "            }\n" +
                 "        }";
         Map<String, String> variables = new HashMap<>();

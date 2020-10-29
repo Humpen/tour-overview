@@ -13,7 +13,6 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.IronIcon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -25,6 +24,7 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
+import de.hsbhv.touroverview.backend.entities.Bewertung;
 import de.hsbhv.touroverview.backend.entities.Bewertungen;
 import de.hsbhv.touroverview.backend.graphql.QueryManager;
 import de.hsbhv.touroverview.views.about.AboutView;
@@ -78,7 +78,7 @@ public class MainView extends AppLayout implements HasUrlParameter<String> {
     //TODO Bewertung aus dem CMS holen. Scheint anderes Datenmodell zu sein.
     private void showFeedback(ClickEvent clickEvent){
         UI.getCurrent().getPage().executeJs("return window.location.pathname").then(String.class, id -> {
-           id = id.substring(1);
+            id = id.substring(1);
             JSONObject jsonBewertungen = QueryManager.getFeedbackById(id);
             Bewertungen bewertungen = QueryManager.mapJsonToObject(jsonBewertungen, Bewertungen.class);
 //            location = location.substring(1);
@@ -86,40 +86,19 @@ public class MainView extends AppLayout implements HasUrlParameter<String> {
 //            JSONObject jsonTour = QueryManager.getTourByName(location);
 //            Tour tour = QueryManager.mapJsonToObject(jsonTour, Tour.class, Tour.class.getSimpleName());
             Dialog dialog = new Dialog();
-            dialog.add(createCard());
-            dialog.add(createCard());
-            dialog.add(createCard());
-            dialog.add(createCard());
-            dialog.add(createCard());
-            dialog.add(createCard());
-            dialog.add(createCard());
-            dialog.add(createCard());
-            dialog.add(createCard());
-            dialog.add(createCard());
-            dialog.add(createCard());
-            dialog.add(createCard());
-            dialog.add(createCard());
-            dialog.add(createCard());
-            dialog.add(createCard());
-            dialog.add(createCard());
-            dialog.add(createCard());
-            dialog.add(createCard());
-            dialog.add(createCard());
+            for (Bewertung bewertung : bewertungen.getBewertungen()) {
+                dialog.add(createCard(bewertung));
+            }
             dialog.open();
         });
     }
 
-    private HorizontalLayout createCard() {
+    private HorizontalLayout createCard(Bewertung bewertung) {
         HorizontalLayout card = new HorizontalLayout();
         card.addClassName("card");
         card.setSpacing(false);
         card.getThemeList().add("spacing-s");
 
-        Icon icon = new Icon(VaadinIcon.STAR);
-        Icon icon2 = new Icon(VaadinIcon.STAR);
-        Icon icon3 = new Icon(VaadinIcon.STAR);
-        Icon icon4 = new Icon(VaadinIcon.STAR);
-        Icon icon5 = new Icon(VaadinIcon.STAR);
         VerticalLayout description = new VerticalLayout();
         description.addClassName("description");
         description.setSpacing(false);
@@ -129,14 +108,11 @@ public class MainView extends AppLayout implements HasUrlParameter<String> {
         header.addClassName("header");
         header.setSpacing(false);
         header.getThemeList().add("spacing-s");
-
-        Span name = new Span("person.getName()");
-        name.addClassName("name");
-        Span date = new Span("person.getDate()");
+        Span date = new Span(bewertung.getCreatedAt().toString());
         date.addClassName("date");
-        header.add(name, date);
+        header.add(date);
 
-        Span post = new Span("person.getPost()");
+        Span post = new Span(bewertung.getFeedback());
         post.addClassName("post");
 
         HorizontalLayout actions = new HorizontalLayout();
@@ -144,20 +120,15 @@ public class MainView extends AppLayout implements HasUrlParameter<String> {
         actions.setSpacing(false);
         actions.getThemeList().add("spacing-s");
 
-        IronIcon likeIcon = new IronIcon("vaadin", "heart");
-        Span likes = new Span("10");
-        likes.addClassName("likes");
-        IronIcon commentIcon = new IronIcon("vaadin", "comment");
-        Span comments = new Span("5");
-        comments.addClassName("comments");
-        IronIcon shareIcon = new IronIcon("vaadin", "connect");
-        Span shares = new Span("1");
-        shares.addClassName("shares");
-
-        actions.add(likeIcon, likes, commentIcon, comments, shareIcon, shares);
-
         description.add(header, post, actions);
-        card.add(icon,icon2,icon3,icon4,icon5, description);
+        for (int i = 1; i < bewertung.getValue(); ++i) {
+            card.add(new Icon(VaadinIcon.STAR));
+        }
+        int valueInInt = (int) bewertung.getValue();
+        if (valueInInt / bewertung.getValue() != 1) {
+            card.add(new Icon(VaadinIcon.STAR_HALF_LEFT));
+        }
+        card.add(description);
         return card;
     }
     private Component createDrawerContent(Tabs menu) {

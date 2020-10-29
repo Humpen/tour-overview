@@ -1,19 +1,11 @@
 package de.hsbhv.touroverview.backend.entities;
 
+import java.util.List;
+
 public class Bewertungen {
-    public float value;
-    public Tour tour;
-    public String feedback;
+    public List<Bewertung> bewertungen;
 
-    public float getValue() {
-        return value;
-    }
-
-    public Tour getTour() {
-        return tour;
-    }
-
-    public String getFeedback() {
-        return feedback;
+    public List<Bewertung> getBewertungen() {
+        return bewertungen;
     }
 }
