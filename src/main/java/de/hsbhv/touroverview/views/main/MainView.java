@@ -81,13 +81,12 @@ public class MainView extends AppLayout implements HasUrlParameter<String> {
             id = id.substring(1);
             JSONObject jsonBewertungen = QueryManager.getFeedbackById(id);
             Bewertungen bewertungen = QueryManager.mapJsonToObject(jsonBewertungen, Bewertungen.class);
-//            location = location.substring(1);
-//            location = location.replace("_"," ");
-//            JSONObject jsonTour = QueryManager.getTourByName(location);
-//            Tour tour = QueryManager.mapJsonToObject(jsonTour, Tour.class, Tour.class.getSimpleName());
             Dialog dialog = new Dialog();
             for (Bewertung bewertung : bewertungen.getBewertungen()) {
                 dialog.add(createCard(bewertung));
+            }
+            if (bewertungen.getBewertungen().size() == 0) {
+                dialog.add(new Span("Keine Bewertungen vorhanden."));
             }
             dialog.open();
         });
