@@ -208,11 +208,23 @@ public class QueryManager {
         return graphQLConnector.sendRequest(graphQLConnector.createRequest(query));
 
     }
+    public static JSONObject getFeedbackById(String id){
+        GraphQLConnector graphQLConnector = new GraphQLConnector();
+        String query = "query($id:ID){\n" +
+                "            bewertungen(where: {tour: {id:$id}}){\n" +
+                "                value\n" +
+                "                feedback\n" +
+                "            }\n" +
+                "        }";
+        Map<String, String> variables = new HashMap<>();
+        variables.put("id", id);
+        return graphQLConnector.sendRequest(graphQLConnector.createRequest(query, variables, ""));
+    }
     //Löppt der Lachs
     public static JSONObject getTourByName(String name){
         GraphQLConnector graphQLConnector = new GraphQLConnector();
         String query = "query($names:String){\n" +
-                "  tour(where: {name: $names}){\n" +
+            "  tour(where: {name: $names}){\n" +
                 "    name\n" +
                 "    id\n" +
                 "    dauer\n" +

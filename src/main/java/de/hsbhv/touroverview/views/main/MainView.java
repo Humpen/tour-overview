@@ -25,6 +25,7 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
+import de.hsbhv.touroverview.backend.entities.Bewertungen;
 import de.hsbhv.touroverview.backend.graphql.QueryManager;
 import de.hsbhv.touroverview.views.about.AboutView;
 import de.hsbhv.touroverview.views.tour.TourView;
@@ -76,7 +77,10 @@ public class MainView extends AppLayout implements HasUrlParameter<String> {
     }
     //TODO Bewertung aus dem CMS holen. Scheint anderes Datenmodell zu sein.
     private void showFeedback(ClickEvent clickEvent){
-        UI.getCurrent().getPage().executeJs("return window.location.pathname").then(String.class, location -> {
+        UI.getCurrent().getPage().executeJs("return window.location.pathname").then(String.class, id -> {
+           id = id.substring(1);
+            JSONObject jsonBewertungen = QueryManager.getFeedbackById(id);
+            Bewertungen bewertungen = QueryManager.mapJsonToObject(jsonBewertungen, Bewertungen.class);
 //            location = location.substring(1);
 //            location = location.replace("_"," ");
 //            JSONObject jsonTour = QueryManager.getTourByName(location);
