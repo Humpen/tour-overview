@@ -9,6 +9,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
@@ -65,8 +66,13 @@ public class MainView extends AppLayout implements HasUrlParameter<String> {
         viewTitle = new H1();
         layout.add(viewTitle);
         layout.add(createFeedbackButton());
+        layout.add(createLogoutButton());
 //        layout.add(new Image("images/user.svg", "Avatar"));
         return layout;
+    }
+
+    private Component createLogoutButton() {
+        return new Anchor("logout", new Button("Log out"));
     }
 
     private Component createFeedbackButton() {
@@ -75,8 +81,9 @@ public class MainView extends AppLayout implements HasUrlParameter<String> {
         button.addClickListener(this::showFeedback);
         return button;
     }
+
     //TODO Bewertung aus dem CMS holen. Scheint anderes Datenmodell zu sein.
-    private void showFeedback(ClickEvent clickEvent){
+    private void showFeedback(ClickEvent clickEvent) {
         UI.getCurrent().getPage().executeJs("return window.location.pathname").then(String.class, id -> {
             id = id.substring(1);
             JSONObject jsonBewertungen = QueryManager.getFeedbackById(id);
