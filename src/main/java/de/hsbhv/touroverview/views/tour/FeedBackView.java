@@ -20,12 +20,91 @@ public class FeedBackView extends VerticalLayout {
         if (bewertungen == null || bewertungen.getBewertungen().size() == 0) {
             verticalLayout.add(new Span("Keine Bewertungen vorhanden."));
         } else {
+            verticalLayout.add(createOverallCard(bewertungen));
             for (Bewertung bewertung : bewertungen.getBewertungen()) {
                 verticalLayout.add(createCard(bewertung));
             }
         }
         add(verticalLayout);
     }
+
+    private HorizontalLayout createOverallCard(Bewertungen bewertungen) {
+        HorizontalLayout card = new HorizontalLayout();
+        card.addClassName("card");
+        card.setSpacing(false);
+        card.getThemeList().add("spacing-s");
+
+        VerticalLayout description = new VerticalLayout();
+        description.addClassName("description");
+        description.setSpacing(false);
+        description.setPadding(false);
+
+        int oneStar = 0;
+        int twoStar = 0;
+        int threeStar = 0;
+        int fourStar = 0;
+        int fiveStar = 0;
+        float overAllRating = 0;
+        for (Bewertung bewertung : bewertungen.getBewertungen()) {
+            switch ((int) bewertung.getValue()) {
+                case 5:
+                    ++fiveStar;
+                    break;
+                case 4:
+                    ++fourStar;
+                    break;
+                case 3:
+                    ++threeStar;
+                    break;
+                case 2:
+                    ++twoStar;
+                    break;
+                case 1:
+                    ++oneStar;
+                    break;
+            }
+        }
+        overAllRating = (oneStar + 2 * twoStar + 3 * threeStar + 4 * fourStar + 5 * fiveStar) / bewertungen.getBewertungen().size();
+        HorizontalLayout overAllLayout = new HorizontalLayout();
+        for (int i = 0; i < overAllRating; ++i) {
+            overAllLayout.add(new Icon(VaadinIcon.STAR));
+        }
+        int valueInInt = (int) overAllRating;
+        if (valueInInt / overAllRating != 1) {
+            overAllLayout.add(new Icon(VaadinIcon.STAR_HALF_LEFT));
+        }
+        description.add(overAllLayout);
+
+        for (int j = 0; j <= 4; ++j) {
+            HorizontalLayout horizontalLayout = new HorizontalLayout();
+            for (int i = 0; i <= j; ++i) {
+                horizontalLayout.add(new Icon(VaadinIcon.STAR));
+            }
+            switch (j) {
+                case 0:
+                    horizontalLayout.add(new Span(String.valueOf(oneStar)));
+                    break;
+                case 1:
+                    horizontalLayout.add(new Span(String.valueOf(twoStar)));
+                    break;
+                case 2:
+                    horizontalLayout.add(new Span(String.valueOf(threeStar)));
+                    break;
+                case 3:
+                    horizontalLayout.add(new Span(String.valueOf(fourStar)));
+                    break;
+                case 4:
+                    horizontalLayout.add(new Span(String.valueOf(fiveStar)));
+                    break;
+                default:
+                    break;
+            }
+            description.add(horizontalLayout);
+        }
+        card.add(description);
+        return card;
+    }
+
 
     private HorizontalLayout createCard(Bewertung bewertung) {
         HorizontalLayout card = new HorizontalLayout();
@@ -55,7 +134,7 @@ public class FeedBackView extends VerticalLayout {
         actions.getThemeList().add("spacing-s");
 
         description.add(header, post, actions);
-        for (int i = 1; i < bewertung.getValue(); ++i) {
+        for (int i = 1; i <= bewertung.getValue(); ++i) {
             card.add(new Icon(VaadinIcon.STAR));
         }
         int valueInInt = (int) bewertung.getValue();
