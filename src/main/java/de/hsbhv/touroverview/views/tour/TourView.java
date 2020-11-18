@@ -2,7 +2,9 @@ package de.hsbhv.touroverview.views.tour;
 
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
+import de.hsbhv.touroverview.backend.entities.Bewertungen;
 import de.hsbhv.touroverview.backend.entities.Location;
 import de.hsbhv.touroverview.backend.entities.PointOfInterest;
 import de.hsbhv.touroverview.backend.entities.Tour;
@@ -23,8 +25,10 @@ public class TourView extends HorizontalLayout implements HasUrlParameter<String
 
     private MapLocationService service;
     private Tour tour;
+    private Bewertungen bewertungen;
     private MapView mapView;
     private TourGrid tourGrid;
+    private VerticalLayout verticalLayout;
     @Autowired
     public TourView(MapLocationService mapLocationService){
         this.service = mapLocationService;
@@ -34,42 +38,41 @@ public class TourView extends HorizontalLayout implements HasUrlParameter<String
         setSizeFull();
         setPadding(false);
         setSpacing(false);
-
-        if(tourGrid == null) {
-            add(tourGrid = new TourGrid(tour));
+        if (verticalLayout == null) {
+            verticalLayout = new VerticalLayout();
+        }
+        if (tourGrid == null) {
+            verticalLayout.add(tourGrid = new TourGrid(tour));
+            verticalLayout.add(new FeedBackView(bewertungen));
+            add(verticalLayout);
         } else {
             tourGrid.updateTourGrid(tour);
+            verticalLayout.removeAll();
+            verticalLayout.add(tourGrid, new FeedBackView(bewertungen));
         }
-        if(mapView == null) {
+        if (mapView == null) {
             add(mapView = new MapView(this.service));
         } {
             mapView.updateMapView(service);
         }
     }
 
-    //TODO Variable tourName liefert nicht den erwarteten String. Bsp.: Anstatt von Tour 1 wird Tour%201 übergeben.
-
-    /**
-     * Verhalten ist nicht konsistent bei tourName. Anscheinend machen wir es hier falsch. Wir können uns wohl nicht auf den Parameter verlassen.
-     * https://vaadin.com/forum/thread/17321464/access-url-parameter-from-route-layout
-     * https://stackoverflow.com/questions/60058913/adapting-url-query-parameters-when-navigating-between-views-in-vaadin-flow
-     * Da könnte ne Lösung dabei sein, aber ich leg mich für heute schlafen
-     *
-     * Problem liegt im Leerzeichen von "Tour n" der wandelt das Leerzeichen um. Einzige Lösung die bisher zuverlässig
-     * funktioniert ist das Leerzeichen gegen "_" zu ersetzen und für die Query zurück zu konvertieren.
-     */
     @Override
     public void setParameter(BeforeEvent beforeEvent, @OptionalParameter String tourId) {
         List<PointOfInterest> pointOfInterestList = null;
-        if(tourId != null){
+        if(tourId != null) {
             JSONObject jsonTour = QueryManager.getTourById(tourId);
-            if(jsonTour != null) {
+            if (jsonTour != null) {
                 tour = QueryManager.mapJsonToObject(jsonTour, Tour.class, Tour.class.getSimpleName());
             }
-            if(tour != null) {
+            JSONObject jsonBewertungen = QueryManager.getFeedbackById(tourId);
+            if (jsonBewertungen != null) {
+                bewertungen = QueryManager.mapJsonToObject(jsonBewertungen, Bewertungen.class);
+            }
+            if (tour != null) {
                 pointOfInterestList = tour.getPlaceOfInterests();
             }
-            if(pointOfInterestList != null) {
+            if (pointOfInterestList != null) {
                 service.removeAllSpots();
                 for (PointOfInterest poi : pointOfInterestList) {
                     Location location = poi.getPosition();
