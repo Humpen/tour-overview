@@ -33,9 +33,6 @@ public class TourGrid extends HorizontalLayout {
         grid = new Grid<>();
         grid.addColumn(PointOfInterest::getName).setHeader("Name");
         grid.addColumn(PointOfInterest::getInfoTextString).setHeader("Info Text");
-        grid.addColumn(PointOfInterest::getRadius).setHeader("Anzeige Radius");
-        grid.addColumn(PointOfInterest::getLatitude).setHeader("Latitude");
-        grid.addColumn(PointOfInterest::getLongitude).setHeader("Longitude");
         grid.setSelectionMode(Grid.SelectionMode.NONE);
         grid.addItemClickListener(event -> {
             Dialog dialog = new Dialog();

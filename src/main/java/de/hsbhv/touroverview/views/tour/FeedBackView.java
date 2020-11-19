@@ -9,23 +9,23 @@ import de.hsbhv.touroverview.backend.entities.Bewertung;
 import de.hsbhv.touroverview.backend.entities.Bewertungen;
 
 public class FeedBackView extends VerticalLayout {
-    private VerticalLayout verticalLayout;
-
     public FeedBackView(Bewertungen bewertungen) {
         init(bewertungen);
     }
 
     private void init(Bewertungen bewertungen) {
-        verticalLayout = new VerticalLayout();
+        getStyle().set("overflow", "auto");
+        setWidth("100%");
+        setHeight("40%");
+
         if (bewertungen == null || bewertungen.getBewertungen().size() == 0) {
-            verticalLayout.add(new Span("Keine Bewertungen vorhanden."));
+            add(new Span("Keine Bewertungen vorhanden."));
         } else {
-            verticalLayout.add(createOverallCard(bewertungen));
+            add(createOverallCard(bewertungen));
             for (Bewertung bewertung : bewertungen.getBewertungen()) {
-                verticalLayout.add(createCard(bewertung));
+                add(createCard(bewertung));
             }
         }
-        add(verticalLayout);
     }
 
     private HorizontalLayout createOverallCard(Bewertungen bewertungen) {
@@ -38,6 +38,7 @@ public class FeedBackView extends VerticalLayout {
         description.addClassName("description");
         description.setSpacing(false);
         description.setPadding(false);
+        description.add(new Span("Gesamtbewertung: "));
 
         int oneStar = 0;
         int twoStar = 0;
@@ -62,6 +63,8 @@ public class FeedBackView extends VerticalLayout {
                 case 1:
                     ++oneStar;
                     break;
+                default:
+                    break;
             }
         }
         overAllRating = (oneStar + 2 * twoStar + 3 * threeStar + 4 * fourStar + 5 * fiveStar) / bewertungen.getBewertungen().size();
@@ -69,31 +72,33 @@ public class FeedBackView extends VerticalLayout {
         for (int i = 0; i < overAllRating; ++i) {
             overAllLayout.add(new Icon(VaadinIcon.STAR));
         }
+
         int valueInInt = (int) overAllRating;
         if (valueInInt / overAllRating != 1) {
             overAllLayout.add(new Icon(VaadinIcon.STAR_HALF_LEFT));
         }
+        overAllLayout.add(new Span(String.valueOf(overAllRating)));
         description.add(overAllLayout);
 
-        for (int j = 0; j <= 4; ++j) {
+        for (int j = 4; j >= 0; --j) {
             HorizontalLayout horizontalLayout = new HorizontalLayout();
-            for (int i = 0; i <= j; ++i) {
+            for (int i = j; i >= 0; --i) {
                 horizontalLayout.add(new Icon(VaadinIcon.STAR));
             }
             switch (j) {
-                case 0:
+                case 4:
                     horizontalLayout.add(new Span(String.valueOf(oneStar)));
                     break;
-                case 1:
+                case 3:
                     horizontalLayout.add(new Span(String.valueOf(twoStar)));
                     break;
                 case 2:
                     horizontalLayout.add(new Span(String.valueOf(threeStar)));
                     break;
-                case 3:
+                case 1:
                     horizontalLayout.add(new Span(String.valueOf(fourStar)));
                     break;
-                case 4:
+                case 0:
                     horizontalLayout.add(new Span(String.valueOf(fiveStar)));
                     break;
                 default:

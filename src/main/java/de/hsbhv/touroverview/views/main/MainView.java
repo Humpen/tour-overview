@@ -1,20 +1,14 @@
 package de.hsbhv.touroverview.views.main;
 
-import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -25,8 +19,6 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
-import de.hsbhv.touroverview.backend.entities.Bewertung;
-import de.hsbhv.touroverview.backend.entities.Bewertungen;
 import de.hsbhv.touroverview.backend.graphql.QueryManager;
 import de.hsbhv.touroverview.views.about.AboutView;
 import de.hsbhv.touroverview.views.tour.TourView;
@@ -65,78 +57,16 @@ public class MainView extends AppLayout implements HasUrlParameter<String> {
         layout.add(new DrawerToggle());
         viewTitle = new H1();
         layout.add(viewTitle);
-        layout.add(createFeedbackButton());
         layout.add(createLogoutButton());
-//        layout.add(new Image("images/user.svg", "Avatar"));
         return layout;
     }
 
     private Component createLogoutButton() {
-        return new Anchor("logout", new Button("Log out"));
+        Anchor anchor = new Anchor("logout", new Button("Log out"));
+        anchor.getElement().getStyle().set("margin-left", "auto");
+        return anchor;
     }
 
-    private Component createFeedbackButton() {
-        Button button = new Button("Tour Feedback");
-        button.getElement().getStyle().set("margin-left", "auto");
-        button.addClickListener(this::showFeedback);
-        return button;
-    }
-
-    //TODO Bewertung aus dem CMS holen. Scheint anderes Datenmodell zu sein.
-    private void showFeedback(ClickEvent clickEvent) {
-        UI.getCurrent().getPage().executeJs("return window.location.pathname").then(String.class, id -> {
-            id = id.substring(1);
-            JSONObject jsonBewertungen = QueryManager.getFeedbackById(id);
-            Bewertungen bewertungen = QueryManager.mapJsonToObject(jsonBewertungen, Bewertungen.class);
-            Dialog dialog = new Dialog();
-            for (Bewertung bewertung : bewertungen.getBewertungen()) {
-                dialog.add(createCard(bewertung));
-            }
-            if (bewertungen.getBewertungen().size() == 0) {
-                dialog.add(new Span("Keine Bewertungen vorhanden."));
-            }
-            dialog.open();
-        });
-    }
-
-    private HorizontalLayout createCard(Bewertung bewertung) {
-        HorizontalLayout card = new HorizontalLayout();
-        card.addClassName("card");
-        card.setSpacing(false);
-        card.getThemeList().add("spacing-s");
-
-        VerticalLayout description = new VerticalLayout();
-        description.addClassName("description");
-        description.setSpacing(false);
-        description.setPadding(false);
-
-        HorizontalLayout header = new HorizontalLayout();
-        header.addClassName("header");
-        header.setSpacing(false);
-        header.getThemeList().add("spacing-s");
-        Span date = new Span(bewertung.getCreatedAt().toString());
-        date.addClassName("date");
-        header.add(date);
-
-        Span post = new Span(bewertung.getFeedback());
-        post.addClassName("post");
-
-        HorizontalLayout actions = new HorizontalLayout();
-        actions.addClassName("actions");
-        actions.setSpacing(false);
-        actions.getThemeList().add("spacing-s");
-
-        description.add(header, post, actions);
-        for (int i = 1; i < bewertung.getValue(); ++i) {
-            card.add(new Icon(VaadinIcon.STAR));
-        }
-        int valueInInt = (int) bewertung.getValue();
-        if (valueInInt / bewertung.getValue() != 1) {
-            card.add(new Icon(VaadinIcon.STAR_HALF_LEFT));
-        }
-        card.add(description);
-        return card;
-    }
     private Component createDrawerContent(Tabs menu) {
         VerticalLayout layout = new VerticalLayout();
         layout.setSizeFull();
@@ -168,16 +98,15 @@ public class MainView extends AppLayout implements HasUrlParameter<String> {
         JSONArray tourArray = data.getJSONArray("tours");
 
         RouterLink[] links = new RouterLink[tourArray.length()+1];
-//        new RouterLink("Hello World", TourView.class);,
 
+        links[0] = new RouterLink("Willkommensseite", AboutView.class);
 
         for(int i = 0; i < tourArray.length(); ++i){
             JSONObject tour = tourArray.getJSONObject(i);
             String tourName= tour.getString("name");
             String tourID = tour.getString("id");
-            links[i] = new RouterLink(tourName, TourView.class,tourID);
+            links[i + 1] = new RouterLink(tourName, TourView.class, tourID);
         }
-        links[links.length-1] = new RouterLink("About", AboutView.class);
 
         return Arrays.stream(links).map(MainView::createTab).toArray(Tab[]::new);
     }

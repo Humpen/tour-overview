@@ -1,6 +1,7 @@
 package de.hsbhv.touroverview.views;
 
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -28,13 +29,12 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
         login.setAction("login");
 
-
+        add(new Image("images/HS-BHV.png", "Tour Overview logo"));
         add(new H1("Tour Overview HS-Bremerhaven"), login);
     }
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-        // inform the user about an authentication error
         if (beforeEnterEvent.getLocation()
 
 

@@ -17,8 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-//@Route(value = "hello", layout = MainView.class)
-@Route(value = "", layout = MainView.class)
+@Route(value = "tour", layout = MainView.class)
 @PageTitle("Tour View")
 @CssImport("./styles/views/helloworld/hello-world-view.css")
 public class TourView extends HorizontalLayout implements HasUrlParameter<String> {
