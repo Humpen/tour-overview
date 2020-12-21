@@ -28,8 +28,10 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
         setJustifyContentMode(JustifyContentMode.CENTER);
 
         login.setAction("login");
-
-        add(new Image("images/HS-BHV.png", "Tour Overview logo"));
+        Image image = new Image("images/HS-BHV.png", "Tour Overview logo");
+        image.setHeight("300 px");
+        image.setWidth("300px");
+        add(image);
         add(new H1("Tour Overview HS-Bremerhaven"), login);
     }
 
