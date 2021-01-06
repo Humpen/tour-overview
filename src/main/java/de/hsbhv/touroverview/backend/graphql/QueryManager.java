@@ -268,9 +268,9 @@ public class QueryManager {
                 "           latitude\n"+
                 "           }\n"+
                 "        infoText{\n" +
-                "           text\n"+
-                "           }\n"+
-                "       }\n"+
+                "           text\n" +
+                "           }\n" +
+                "       }\n" +
                 "   }\n" +
                 "}\n" +
                 "\n";
@@ -279,18 +279,27 @@ public class QueryManager {
         return graphQLConnector.sendRequest(graphQLConnector.createRequest(query, variables, ""));
     }
 
+    //In einer anderen schreibweise wie sonst gemacht funktioniert die Query nicht. Weiß Gott warum...
+    public static JSONObject getVuforiasEasy() {
+        GraphQLConnector graphQLConnector = new GraphQLConnector();
+        String query = "{vuforias{id, tourId{id}, name, bilder{fileName, height, width, url(transformation: {document:{output: {format:png}}})}}}";
+
+        return graphQLConnector.sendRequest(graphQLConnector.createRequest(query));
+    }
+
     /**
      * Maps a JSON object to the specified Object with GSON.
-     * @param json JSON object from query
-     * @param msgClass Class which should be mapped to
+     *
+     * @param json      JSON object from query
+     * @param msgClass  Class which should be mapped to
      * @param className Classname of {@param msgClass} is only needed if their are nested objects and no variable available to map. Something like:
      *                  {"data":
      *                  {"tour":
-     *                    someVariables }}
-     * @param <T> is {@param msgClass}
+     *                  someVariables }}
+     * @param <T>       is {@param msgClass}
      * @return return type is {@param msgClass}
      */
-    public static  <T> T mapJsonToObject(JSONObject json ,Class msgClass, String className) {
+    public static <T> T mapJsonToObject(JSONObject json, Class msgClass, String className) {
         className = className.toLowerCase();
         json = (JSONObject) json.get("data");
         return (T) MessageUtil.createFromJson(json.get(className).toString(), msgClass);
