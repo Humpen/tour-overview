@@ -29,11 +29,12 @@ import java.util.Date;
  */
 public class DeleteTarget implements TargetStatusListener {
 
-	private final float pollingIntervalMinutes = 60;//poll at 1-hour interval
+	private final float pollingIntervalMinutes = 2;//poll at 1-hour interval
 	//Server Keys
 	private String accessKey = "[ server access key ]";
 	private String secretKey = "[ server secret key ]";
 	private String targetId = "[ target id ]";
+	private Boolean isDeleted = false;
 	private String url = "https://vws.vuforia.com";
 	private TargetStatusPoller targetStatusPoller;
 
@@ -51,6 +52,7 @@ public class DeleteTarget implements TargetStatusListener {
 
 		HttpResponse response = client.execute(deleteRequest);
 		System.out.println("Delete Response " + EntityUtils.toString(response.getEntity()));
+		isDeleted = true;
 	}
 
 	private void setHeaders(HttpUriRequest request) {
@@ -114,5 +116,9 @@ public class DeleteTarget implements TargetStatusListener {
 				}
 			}
 		}
+	}
+
+	public Boolean getDeleted() {
+		return isDeleted;
 	}
 }

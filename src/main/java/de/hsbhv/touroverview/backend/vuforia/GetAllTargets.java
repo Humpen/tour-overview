@@ -44,9 +44,4 @@ public class GetAllTargets {
 		request.setHeader(new BasicHeader("Date", DateUtils.formatDate(new Date()).replaceFirst("[+]00:00$", "")));
 		request.setHeader("Authorization", "VWS " + accessKey + ":" + sb.tmsSignature(request, secretKey));
 	}
-//
-//	public static void main(String[] args) throws URISyntaxException, ClientProtocolException, IOException {
-//		GetAllTargets g = new GetAllTargets();
-//		g.getTargets();
-//	}
 }

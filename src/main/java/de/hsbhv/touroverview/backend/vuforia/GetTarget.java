@@ -50,9 +50,4 @@ public class GetTarget {
         request.setHeader("Authorization", "VWS " + accessKey + ":" + sb.tmsSignature(request, secretKey));
     }
 
-//
-//	public static void main(String[] args) throws URISyntaxException, ClientProtocolException, IOException {
-//		GetTarget g = new GetTarget();
-//		g.getTarget();
-//	}
 }

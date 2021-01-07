@@ -26,20 +26,22 @@ import java.util.Date;
 
 public class PostNewTarget implements TargetStatusListener {
 
-    private final float pollingIntervalMinutes = 60;//poll at 1-hour interval
+    private final float pollingIntervalMinutes = 2;//poll at 1-hour interval
     //Server Keys
     private String accessKey = "[ server access key ]";
     private String secretKey = "[ server secret key ]";
     private String url = "https://vws.vuforia.com";
     private String targetName = "[ target name ]";
     private String imageLocation = "[ file system path ]";
+    private String metaData = "[ meta data]";
     private TargetStatusPoller targetStatusPoller;
 
-    public PostNewTarget(String accessKey, String secretKey, String targetName, String imageLocation) {
+    public PostNewTarget(String accessKey, String secretKey, String targetName, String imageLocation, String metaData) {
         this.accessKey = accessKey;
         this.secretKey = secretKey;
         this.targetName = targetName;
         this.imageLocation = imageLocation;
+        this.metaData = metaData;
     }
 
     private String postTarget() throws URISyntaxException, ClientProtocolException, IOException, JSONException {
@@ -75,7 +77,7 @@ public class PostNewTarget implements TargetStatusListener {
         requestBody.put("width", 320.0); // Mandatory
         requestBody.put("image", Base64.encodeBase64String(image)); // Mandatory
         requestBody.put("active_flag", 1); // Optional
-        requestBody.put("application_metadata", Base64.encodeBase64String("Vuforia test metadata".getBytes())); // Optional
+        requestBody.put("application_metadata", Base64.encodeBase64String(metaData.getBytes())); // Optional
     }
 
     private void setHeaders(HttpUriRequest request) {
