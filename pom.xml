@@ -3,7 +3,7 @@
     <groupId>de.hsbhv.touroverview</groupId>
     <artifactId>tour-overview</artifactId>
     <name>Tour Overview</name>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <properties>
