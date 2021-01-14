@@ -86,8 +86,8 @@ public class AsyncCaller {
                         target = new DeleteTarget("037b8b16480313b190148e80829cd3bea027b469", "748f8961034e7dc36b0c72b670796c95c90f6fbc", targetId);
                         target.deactivateThenDeleteTarget();
                     }
-                    while (!target.getDeleted()) {
-                        Thread.sleep(250000);
+                    while (target != null && !target.getDeleted()) {
+                        Thread.sleep(360000); // Warte 6 Minuten bevor das Flag erneut abgefragt wird
                     }
                 }
             } catch (URISyntaxException | IOException | InterruptedException e) {

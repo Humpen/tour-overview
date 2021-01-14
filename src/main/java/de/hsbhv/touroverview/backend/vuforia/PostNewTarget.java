@@ -26,7 +26,7 @@ import java.util.Date;
 
 public class PostNewTarget implements TargetStatusListener {
 
-    private final float pollingIntervalMinutes = 2;//poll at 1-hour interval
+    private final float pollingIntervalMinutes = 5;//poll at 1-hour interval
     //Server Keys
     private String accessKey = "[ server access key ]";
     private String secretKey = "[ server secret key ]";
