@@ -57,3 +57,7 @@ Once the Docker image is correctly built, you can test it locally using
 ```
 docker run -p 8080:8080 myapp:latest
 ```
+## Deployment
+
+mvn clean package -Pproduction ausführen dann das Jar auf Server deployen und mit java -jar --HIER JAR EINFÜGEN--
+starten. 
