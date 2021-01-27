@@ -40,7 +40,6 @@ public class GetTarget {
         setHeaders(getRequest);
 
         HttpResponse response = client.execute(getRequest);
-        //TODO
         System.out.println(EntityUtils.toString(response.getEntity()));
     }
 

@@ -53,6 +53,7 @@ public class DeleteTarget implements TargetStatusListener {
 		HttpResponse response = client.execute(deleteRequest);
 		System.out.println("Delete Response " + EntityUtils.toString(response.getEntity()));
 		isDeleted = true;
+		VuforiaInfo.getInstance().deleteList();
 	}
 
 	private void setHeaders(HttpUriRequest request) {

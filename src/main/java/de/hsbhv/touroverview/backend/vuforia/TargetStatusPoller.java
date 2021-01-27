@@ -96,7 +96,6 @@ public class TargetStatusPoller {
 		}
 
 		System.out.println("getTarget() = " + getTargetResultJSON.toString());
-
 		return getTargetResultJSON;
 	}
 

@@ -58,6 +58,8 @@ public class PostNewTarget implements TargetStatusListener {
         String responseBody = EntityUtils.toString(response.getEntity());
         System.out.println(responseBody);
 
+        VuforiaInfo.getInstance().updateList(new JSONObject(responseBody), targetName);
+
         JSONObject jobj = new JSONObject(responseBody);
 
         String uniqueTargetId = jobj.has("target_id") ? jobj.getString("target_id") : "";
