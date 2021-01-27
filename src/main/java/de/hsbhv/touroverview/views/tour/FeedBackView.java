@@ -87,19 +87,19 @@ public class FeedBackView extends VerticalLayout {
             }
             switch (j) {
                 case 4:
-                    horizontalLayout.add(new Span(String.valueOf(oneStar)));
+                    horizontalLayout.add(new Span(String.valueOf(fiveStar)));
                     break;
                 case 3:
-                    horizontalLayout.add(new Span(String.valueOf(twoStar)));
+                    horizontalLayout.add(new Span(String.valueOf(fourStar)));
                     break;
                 case 2:
                     horizontalLayout.add(new Span(String.valueOf(threeStar)));
                     break;
                 case 1:
-                    horizontalLayout.add(new Span(String.valueOf(fourStar)));
+                    horizontalLayout.add(new Span(String.valueOf(twoStar)));
                     break;
                 case 0:
-                    horizontalLayout.add(new Span(String.valueOf(fiveStar)));
+                    horizontalLayout.add(new Span(String.valueOf(oneStar)));
                     break;
                 default:
                     break;
